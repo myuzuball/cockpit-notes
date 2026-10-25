@@ -4,24 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cockpit Assistant</title>
+  <!-- QRコード生成ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
-      --bg-base: #1C1C1E;       /* Macメモ帳風のソフトな黒 */
-      --bg-surface: #2C2C2E;    /* カード・ブロックの背景 */
-      --bg-highlight: #3A3A3C;  /* ボタン等の背景 */
-      --text-main: #F2F2F7;     /* 眩しさを抑えたメイン白文字 */
-      --text-sub: #8E8E93;      /* 補助テキスト（グレー） */
-      --accent: #E5A93C;        /* メモ帳風アンバー/ゴールド */
-      --accent-green: #30D158;  /* 確定・SETボタン用グリーン */
-      --accent-blue: #0A84FF;   /* タブ選択時ブルー */
-      --accent-red: #FF453A;    /* 警告・削除用レッド */
+      --bg-base: #1C1C1E;       /* Macメモ帳風ダーク */
+      --bg-surface: #2C2C2E;    /* カード・ブロック */
+      --bg-highlight: #3A3A3C;  /* ボタン背景 */
+      --text-main: #F2F2F7;     /* メイン白文字 */
+      --text-sub: #8E8E93;      /* 補助グレー */
+      --accent: #E5A93C;        /* アンバー/ゴールド */
+      --accent-green: #30D158;  /* SETボタン用グリーン */
+      --accent-blue: #0A84FF;   /* タブ選択ブルー */
+      --accent-red: #FF453A;    /* 削除用レッド */
       --border: #48484A;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background-color: var(--bg-base);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
@@ -46,13 +47,19 @@
     .header-left { display: flex; align-items: center; gap: 14px; }
     .menu-btn {
       background: none; border: none; color: var(--accent);
-      font-size: 32px; cursor: pointer; padding: 4px;
+      font-size: 30px; cursor: pointer; padding: 4px;
     }
-    .flight-title { font-size: 30px; font-weight: 800; letter-spacing: 1px; color: #FFF; }
-    .route-info { font-size: 20px; font-weight: 600; color: var(--accent); }
-    .header-times { font-size: 19px; font-family: monospace; font-weight: bold; text-align: right; }
+    .flight-title { font-size: 28px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
+    .route-info { font-size: 19px; font-weight: 600; color: var(--accent); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-times { font-size: 18px; font-family: monospace; font-weight: bold; text-align: right; }
+    .mode-toggle-btn {
+      background: var(--bg-highlight); border: 1px solid var(--accent);
+      color: var(--accent); padding: 6px 10px; border-radius: 6px;
+      font-size: 13px; font-weight: bold; cursor: pointer;
+    }
 
-    /* 大ボタン タブ切り替え */
+    /* タブ切り替えバー */
     .tab-bar {
       position: fixed;
       top: 75px; left: 0; right: 0;
@@ -78,14 +85,13 @@
       border-bottom-color: var(--accent-blue);
     }
 
-    /* メインコンテンツ領域 */
+    /* メインコンテンツ */
     main {
-      padding: 145px 16px 80px 16px;
+      padding: 145px 16px 40px 16px;
       max-width: 900px;
       margin: 0 auto;
     }
 
-    /* セクション・カードスタイル */
     .card {
       background-color: var(--bg-surface);
       border-radius: 12px;
@@ -94,17 +100,15 @@
       border: 1px solid var(--border);
     }
     .section-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: var(--text-sub);
       text-transform: uppercase;
       letter-spacing: 1.5px;
       margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
     }
 
-    /* 強調表示 */
+    /* 強調ゲート表示 */
     .gate-highlight {
       font-size: 32px;
       font-weight: 900;
@@ -117,7 +121,7 @@
       margin: 10px 0;
     }
 
-    /* グリッド周波数 */
+    /* 周波数グリッド */
     .freq-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -130,346 +134,478 @@
       text-align: center;
       font-family: monospace;
     }
-    .freq-label { font-size: 14px; color: var(--text-sub); }
+    .freq-label { font-size: 13px; color: var(--text-sub); }
     .freq-val { font-size: 22px; font-weight: bold; color: #FFF; }
 
-    /* テキスト入力・クリアランスエリア */
-    textarea {
+    textarea, input[type="text"], input[type="number"] {
       width: 100%;
       background: #151516;
       border: 1px solid var(--border);
       border-radius: 8px;
       color: #FFF;
-      font-size: 19px;
+      font-size: 18px;
       padding: 12px;
       font-family: monospace;
-      resize: vertical;
     }
 
     /* スコーク専用 8進テンキー */
-    .keypad-container {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+    .keypad-container { display: flex; gap: 16px; flex-wrap: wrap; }
     .keypad-display {
-      flex: 1;
-      min-width: 220px;
-      background: #000;
-      border: 2px solid var(--accent);
+      flex: 1; min-width: 200px;
+      background: #000; border: 2px solid var(--accent);
       border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 12px;
     }
-    .squawk-val {
-      font-family: monospace;
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: 8px;
-      color: var(--accent);
-    }
+    .squawk-val { font-family: monospace; font-size: 46px; font-weight: 900; letter-spacing: 6px; color: var(--accent); }
     .keypad-keys {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      flex: 1.5;
-      min-width: 280px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+      flex: 1.5; min-width: 260px;
     }
     .key-btn {
-      background: var(--bg-highlight);
-      border: 1px solid var(--border);
-      color: #FFF;
-      font-size: 26px;
-      font-weight: bold;
-      padding: 14px 0;
-      border-radius: 8px;
-      cursor: pointer;
+      background: var(--bg-highlight); border: 1px solid var(--border);
+      color: #FFF; font-size: 24px; font-weight: bold; padding: 12px 0;
+      border-radius: 8px; cursor: pointer;
     }
     .key-btn:active { background: #555; }
-    .key-btn.set {
-      grid-column: span 2;
-      background: var(--accent-green);
-      color: #000;
-      font-size: 22px;
-    }
+    .key-btn.set { grid-column: span 2; background: var(--accent-green); color: #000; font-size: 20px; }
     .key-btn.clr { background: #442; color: #F88; }
 
     /* PAX 選択ボタン群 */
-    .pax-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
+    .pax-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .pax-code-btn {
-      background: var(--bg-highlight);
-      border: 1px solid var(--border);
-      color: #FFF;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
+      background: var(--bg-highlight); border: 1px solid var(--border);
+      color: #FFF; padding: 8px 12px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer;
     }
     .pax-code-btn:active { background: var(--accent); color: #000; }
     .pax-list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-highlight);
-      padding: 10px 14px;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      font-size: 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg-highlight); padding: 10px 14px; border-radius: 6px; margin-bottom: 6px;
     }
-    .del-btn {
-      background: var(--accent-red);
-      color: #FFF;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    .del-btn { background: var(--accent-red); color: #FFF; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-    /* サイドバー・ドロワー（レグ切替） */
+    /* サイドバー・ドロワー */
     .drawer {
-      position: fixed;
-      top: 0; bottom: 0; left: -320px;
-      width: 300px;
-      background: #121214;
-      border-right: 2px solid var(--border);
-      z-index: 200;
-      transition: left 0.25s ease;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      position: fixed; top: 0; bottom: 0; left: -320px; width: 300px;
+      background: #121214; border-right: 2px solid var(--border); z-index: 200;
+      transition: left 0.25s ease; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px;
     }
     .drawer.open { left: 0; }
-    .drawer-overlay {
-      position: fixed;
-      top: 0; bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 150;
-      display: none;
-    }
+    .drawer-overlay { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
     .drawer-overlay.open { display: block; }
     .leg-select-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      color: #FFF;
-      padding: 16px;
-      border-radius: 8px;
-      text-align: left;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
+      background: var(--bg-surface); border: 1px solid var(--border); color: #FFF;
+      padding: 14px; border-radius: 8px; text-align: left; font-size: 18px; font-weight: bold; cursor: pointer;
     }
     .leg-select-btn.active { border-color: var(--accent); background: #332B1A; }
 
-    /* フッター同期ボタンバー */
-    footer {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 16px;
-      z-index: 90;
-    }
-    .sync-btn {
-      background: var(--bg-highlight);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      padding: 8px 20px;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    .raw-text { white-space: pre-wrap; font-family: monospace; font-size: 16px; }
 
-    .raw-text { white-space: pre-wrap; font-family: monospace; font-size: 17px; }
+    /* QRジェネレーター（スマホ用画面）スタイル */
+    #qrGeneratorView { display: none; padding: 20px 16px; max-width: 600px; margin: 0 auto; }
+    .leg-input-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+    .leg-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .btn-main {
+      width: 100%; background: var(--accent); color: #000; border: none;
+      padding: 16px; border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 10px;
+    }
+    #qrcodeArea {
+      margin-top: 20px; background: #FFF; padding: 20px; border-radius: 12px;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 固定ヘッダー -->
-  <header>
-    <div class="header-left">
-      <button class="menu-btn" onclick="toggleDrawer()">≡</button>
-      <div>
-        <div class="flight-title" id="headFlightNo">JL ---</div>
-        <div class="route-info" id="headRoute">DEP ---' / ARR ---'</div>
+  <!-- ==================== 1. コックピット画面 (iPadメイン) ==================== -->
+  <div id="cockpitView">
+    <header>
+      <div class="header-left">
+        <button class="menu-btn" onclick="toggleDrawer()">≡</button>
+        <div>
+          <div class="flight-title" id="headFlightNo">JL ---</div>
+          <div class="route-info" id="headRoute">DEP ---' ──▶ ARR ---'</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-times" id="headTimes">STD ----Z<br>STA ----Z</div>
+        <button class="mode-toggle-btn" onclick="openQrGenerator()">📱入力/QR</button>
+      </div>
+    </header>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabPrepBtn" onclick="switchTab('PREP')">✈ PRE-FLIGHT</button>
+      <button class="tab-btn" id="tabInflightBtn" onclick="switchTab('INFLIGHT')">🛬 IN-FLIGHT / ARR</button>
+    </div>
+
+    <!-- レグ選択ドロワー -->
+    <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="drawer">
+      <h2 style="margin-top:0; color:var(--accent);">Select Leg</h2>
+      <div id="legButtons"></div>
+      <div style="margin-top:auto;">
+        <button class="leg-select-btn" style="text-align:center; background:#222;" onclick="openQrGenerator()">+ 便データを更新 (QR)</button>
+        <button class="leg-select-btn" style="text-align:center; margin-top:8px;" onclick="toggleDrawer()">閉じる</button>
       </div>
     </div>
-    <div class="header-times" id="headTimes">
-      STD ----Z<br>STA ----Z
-    </div>
-  </header>
 
-  <!-- タブ切替 -->
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tabPrepBtn" onclick="switchTab('PREP')">✈ PRE-FLIGHT</button>
-    <button class="tab-btn" id="tabInflightBtn" onclick="switchTab('INFLIGHT')">🛬 IN-FLIGHT / ARR</button>
-  </div>
+    <main>
+      <!-- PRE-FLIGHT タブ -->
+      <div id="tabPrepContent">
+        <div class="card">
+          <div class="section-title">Next Leg Information</div>
+          <div style="font-size: 22px; font-weight:bold; color:var(--accent);" id="prepNextSTD">Next STD: ----Z</div>
+        </div>
 
-  <!-- ドロワー（レグ選択） -->
-  <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
-  <div class="drawer" id="drawer">
-    <h2 style="margin-top:0; color:var(--accent);">Select Leg</h2>
-    <div id="legButtons"></div>
-    <div style="margin-top:auto;">
-      <button class="sync-btn" style="width:100%;" onclick="toggleDrawer()">閉じる</button>
-    </div>
-  </div>
+        <div class="card">
+          <div class="section-title">ATC Clearance (Notes)</div>
+          <textarea id="prepClearance" rows="3" placeholder="Cleared to..."></textarea>
+        </div>
 
-  <!-- メイン表示領域 -->
-  <main>
-    <!-- PRE-FLIGHT タブの内容 -->
-    <div id="tabPrepContent">
-      <div class="card">
-        <div class="section-title">Next Leg Information</div>
-        <div style="font-size: 22px; font-weight:bold; color:var(--accent);" id="prepNextSTD">Next STD: ----Z</div>
-      </div>
-
-      <div class="card">
-        <div class="section-title">ATC Clearance (Notes)</div>
-        <textarea id="prepClearance" rows="3" placeholder="Cleared to..."></textarea>
-      </div>
-
-      <div class="card">
-        <div class="section-title">Squawk (0-7 Octal Keypad)</div>
-        <div class="keypad-container">
-          <div class="keypad-display">
-            <div style="font-size:14px; color:var(--text-sub);">CURRENT SQUAWK</div>
-            <div class="squawk-val" id="squawkDisplay">----</div>
+        <div class="card">
+          <div class="section-title">Squawk (0-7 Octal Keypad)</div>
+          <div class="keypad-container">
+            <div class="keypad-display">
+              <div style="font-size:13px; color:var(--text-sub);">CURRENT SQUAWK</div>
+              <div class="squawk-val" id="squawkDisplay">----</div>
+            </div>
+            <div class="keypad-keys">
+              <button class="key-btn" onclick="pressOct('0')">0</button>
+              <button class="key-btn" onclick="pressOct('1')">1</button>
+              <button class="key-btn" onclick="pressOct('2')">2</button>
+              <button class="key-btn" onclick="pressOct('3')">3</button>
+              <button class="key-btn" onclick="pressOct('4')">4</button>
+              <button class="key-btn" onclick="pressOct('5')">5</button>
+              <button class="key-btn" onclick="pressOct('6')">6</button>
+              <button class="key-btn" onclick="pressOct('7')">7</button>
+              <button class="key-btn clr" onclick="clearOct()">CLR</button>
+              <button class="key-btn set" onclick="setSquawk()">SET</button>
+            </div>
           </div>
-          <div class="keypad-keys">
-            <button class="key-btn" onclick="pressOct('0')">0</button>
-            <button class="key-btn" onclick="pressOct('1')">1</button>
-            <button class="key-btn" onclick="pressOct('2')">2</button>
-            <button class="key-btn" onclick="pressOct('3')">3</button>
-            <button class="key-btn" onclick="pressOct('4')">4</button>
-            <button class="key-btn" onclick="pressOct('5')">5</button>
-            <button class="key-btn" onclick="pressOct('6')">6</button>
-            <button class="key-btn" onclick="pressOct('7')">7</button>
-            <button class="key-btn clr" onclick="clearOct()">CLR</button>
-            <button class="key-btn set" onclick="setSquawk()">SET</button>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Total Passengers</div>
+          <input type="number" id="totalPaxInput" placeholder="確定搭乗者数">
+        </div>
+
+        <div class="card">
+          <div class="section-title">Special Passenger Entry</div>
+          <div class="pax-buttons" id="paxButtonContainer"></div>
+          <button class="pax-code-btn" style="background:#4A3F20;" onclick="addFreePax()">+ Free Entry</button>
+          <div style="margin-top:14px;" id="paxListContainer"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Preset COM Frequencies</div>
+          <div class="freq-grid">
+            <div class="freq-box"><div class="freq-label">COM1 PRI</div><div class="freq-val" id="com1Pri">---.--</div></div>
+            <div class="freq-box"><div class="freq-label">COM1 SEC</div><div class="freq-val" id="com1Sec">---.--</div></div>
+            <div class="freq-box"><div class="freq-label">COM2 PRI</div><div class="freq-val">121.50</div></div>
+            <div class="freq-box"><div class="freq-label">COM2 SEC</div><div class="freq-val" id="com2Sec">---.--</div></div>
           </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Departure Setup & Fix Hints</div>
+          <div style="margin-bottom:8px; font-weight:bold; color:var(--accent);" id="accelHeight">Accel Height: ----</div>
+          <div style="font-weight:bold; margin-top:10px;">CDU Setup (DEP):</div>
+          <div class="raw-text" id="depCdu">--</div>
+          <div style="font-weight:bold; margin-top:10px;">Fix Page (DEP):</div>
+          <div class="raw-text" id="depFix">--</div>
+          <div style="font-weight:bold; margin-top:10px;">DEP Notes:</div>
+          <div class="raw-text" id="depNotes">--</div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="section-title">Total Passengers</div>
-        <input type="number" id="totalPaxInput" style="width:100%; font-size:24px; padding:10px; background:#000; color:#FFF; border:1px solid var(--border); border-radius:6px;" placeholder="確定搭乗者数">
-      </div>
+      <!-- IN-FLIGHT / ARR タブ -->
+      <div id="tabInflightContent" style="display:none;">
+        <div class="card">
+          <div class="section-title">Descent Mandatory Gate</div>
+          <div class="gate-highlight" id="arrGate">---</div>
+        </div>
 
-      <div class="card">
-        <div class="section-title">Special Passenger Entry</div>
-        <div class="pax-buttons" id="paxButtonContainer"></div>
-        <button class="pax-code-btn" style="background:#4A3F20;" onclick="addFreePax()">+ Free Entry</button>
-        <div style="margin-top:14px;" id="paxListContainer"></div>
-      </div>
+        <div class="card">
+          <div class="section-title">Terminal Frequencies</div>
+          <div class="raw-text" id="termFreqs" style="font-size:20px; font-weight:bold;">--</div>
+        </div>
 
-      <div class="card">
-        <div class="section-title">Preset COM Frequencies</div>
-        <div class="freq-grid">
-          <div class="freq-box"><div class="freq-label">COM1 PRI</div><div class="freq-val" id="com1Pri">---.--</div></div>
-          <div class="freq-box"><div class="freq-label">COM1 SEC</div><div class="freq-val" id="com1Sec">---.--</div></div>
-          <div class="freq-box"><div class="freq-label">COM2 PRI</div><div class="freq-val">121.50</div></div>
-          <div class="freq-box"><div class="freq-label">COM2 SEC</div><div class="freq-val" id="com2Sec">---.--</div></div>
+        <div class="card" id="accCard" style="display:none;">
+          <div class="section-title" style="color:var(--accent);">Enroute ACC (International)</div>
+          <div class="raw-text" id="enrouteAcc">--</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">CDU Setup & Fix Hints (Arrival)</div>
+          <div style="font-weight:bold;">CDU Setup (ARR):</div>
+          <div class="raw-text" id="arrCdu">--</div>
+          <div style="font-weight:bold; margin-top:10px;">Fix Page (ARR):</div>
+          <div class="raw-text" id="arrFix">--</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Loss Communication Procedure</div>
+          <div class="raw-text" id="lossCom" style="color:#FFA0A0;">--</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Arrival Notes & Airport Info</div>
+          <div class="raw-text" id="arrNotes">--</div>
         </div>
       </div>
+    </main>
+  </div>
 
-      <div class="card">
-        <div class="section-title">Departure Setup & Fix Hints</div>
-        <div style="margin-bottom:8px; font-weight:bold; color:var(--accent);" id="accelHeight">Accel Height: ----</div>
-        <div style="font-weight:bold; margin-top:10px;">CDU Setup (DEP):</div>
-        <div class="raw-text" id="depCdu">--</div>
-        <div style="font-weight:bold; margin-top:10px;">Fix Page (DEP):</div>
-        <div class="raw-text" id="depFix">--</div>
-        <div style="font-weight:bold; margin-top:10px;">DEP Notes:</div>
-        <div class="raw-text" id="depNotes">--</div>
-      </div>
+
+  <!-- ==================== 2. スマホ用QR生成画面 ==================== -->
+  <div id="qrGeneratorView">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0; color:var(--accent);">Flight QR Generator</h2>
+      <button class="mode-toggle-btn" onclick="closeQrGenerator()">✕ 閉じる</button>
     </div>
 
-    <!-- IN-FLIGHT / ARR タブの内容 -->
-    <div id="tabInflightContent" style="display:none;">
-      <div class="card">
-        <div class="section-title">Descent Mandatory Gate</div>
-        <div class="gate-highlight" id="arrGate">---</div>
+    <div class="leg-input-card">
+      <div style="font-weight:bold; color:var(--accent);">Leg 1</div>
+      <div class="leg-input-grid">
+        <input type="text" id="in_f1" placeholder="便名 (例: JL123)">
+        <input type="text" id="in_route1" placeholder="区間 (例: HND-CTS)">
+        <input type="text" id="in_std1" placeholder="STD (例: 0130)">
+        <input type="text" id="in_sta1" placeholder="STA (例: 0305)">
       </div>
+      <input type="text" id="in_next1" placeholder="Next STD (例: 0415)" style="margin-top:8px;">
+    </div>
 
-      <div class="card">
-        <div class="section-title">Terminal Frequencies</div>
-        <div class="raw-text" id="termFreqs" style="font-size:20px; font-weight:bold;">--</div>
+    <div class="leg-input-card">
+      <div style="font-weight:bold; color:var(--accent);">Leg 2 (任意)</div>
+      <div class="leg-input-grid">
+        <input type="text" id="in_f2" placeholder="便名 (例: JL126)">
+        <input type="text" id="in_route2" placeholder="区間 (例: CTS-HND)">
+        <input type="text" id="in_std2" placeholder="STD (例: 0415)">
+        <input type="text" id="in_sta2" placeholder="STA (例: 0555)">
       </div>
+      <input type="text" id="in_next2" placeholder="Next STD" style="margin-top:8px;">
+    </div>
 
-      <div class="card" id="accCard" style="display:none;">
-        <div class="section-title" style="color:var(--accent);">Enroute ACC (International)</div>
-        <div class="raw-text" id="enrouteAcc">--</div>
+    <div class="leg-input-card">
+      <div style="font-weight:bold; color:var(--accent);">Leg 3 (任意)</div>
+      <div class="leg-input-grid">
+        <input type="text" id="in_f3" placeholder="便名">
+        <input type="text" id="in_route3" placeholder="区間">
+        <input type="text" id="in_std3" placeholder="STD">
+        <input type="text" id="in_sta3" placeholder="STA">
       </div>
+      <input type="text" id="in_next3" placeholder="Next STD" style="margin-top:8px;">
+    </div>
 
-      <div class="card">
-        <div class="section-title">CDU Setup & Fix Hints (Arrival)</div>
-        <div style="font-weight:bold;">CDU Setup (ARR):</div>
-        <div class="raw-text" id="arrCdu">--</div>
-        <div style="font-weight:bold; margin-top:10px;">Fix Page (ARR):</div>
-        <div class="raw-text" id="arrFix">--</div>
-      </div>
+    <button class="btn-main" onclick="generateFlightQR()">QRコードを生成する</button>
 
-      <div class="card">
-        <div class="section-title">Loss Communication Procedure</div>
-        <div class="raw-text" id="lossCom" style="color:#FFA0A0;">--</div>
-      </div>
-
-      <div class="card">
-        <div class="section-title">Arrival Notes & Airport Info</div>
-        <div class="raw-text" id="arrNotes">--</div>
+    <div id="qrcodeArea">
+      <div id="qrcode"></div>
+      <div style="color:#000; font-weight:bold; margin-top:14px; text-align:center; font-size:16px;">
+        会社iPadの「通常カメラ」で<br>このQRコードをかざしてください
       </div>
     </div>
-  </main>
+  </div>
 
-  <!-- フッター操作バー -->
-  <footer>
-    <button class="sync-btn" onclick="pullData()">↓ 事前データ取得 (Pull)</button>
-    <button class="sync-btn" style="color:var(--accent-green);" onclick="pushLogs()">↑ ログ送信 (Push)</button>
-  </footer>
 
   <script>
-    // ★デプロイしたGoogle Apps ScriptのWeb App URLをここに貼り付けます
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxVeV-n4E6b-U3KHfyGYvWm1pVxCnzIt_lvgE5w0bqQvkXHi6BMjMx3Ut8VXWQ0C9Tj/exec";
-
+    let ROUTE_MASTER = {};
     const PAX_CODES = ["INFT","WCHC","WCHS","WCHR","CVIP","MEDA","DEAF","BLND","DPNA","INCP","PRGN","MAMA","PRSN","UMNR","INAD","DEPO","STCR"];
 
-    // 内部データ状態
     let currentLegIndex = 0;
     let legsData = [];
     let octalBuffer = "";
 
-    // 初期起動
-    window.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", async () => {
+      // 1. 保存済みマスタのロード
+      loadMasterFromStorage();
+
+      // 2. GitHub上の最新 routes.csv 取得（オンライン時のみ）
+      await fetchLatestCsvMaster();
+
+      // 3. URLハッシュ (#data=...) からの自動インポート検知 (iPad標準カメラ経由)
+      checkUrlHashImport();
+
+      // 4. ローカル便データのロードと描画
       loadFromStorage();
       renderPaxButtons();
       renderApp();
       bindInputEvents();
+
+      // スマホ画面サイズかつデータなし時は入力画面を自動表示
+      if (window.innerWidth < 500 && (!legsData || legsData.length === 0)) {
+        openQrGenerator();
+      }
     });
 
-    function renderPaxButtons() {
-      const container = document.getElementById("paxButtonContainer");
+    // 画面遷移なしでハッシュが変わった場合（カメラ読み込みでSafariが開いたままの場合）の検知
+    window.addEventListener("hashchange", () => {
+      checkUrlHashImport();
+    });
+
+    /* --- CSVマスタの取得とパース --- */
+    async function fetchLatestCsvMaster() {
+      try {
+        const res = await fetch("./routes.csv", { cache: "no-cache" });
+        if (!res.ok) return;
+        const text = await res.text();
+        const parsed = parseCSVToMaster(text);
+        if (Object.keys(parsed).length > 0) {
+          ROUTE_MASTER = parsed;
+          localStorage.setItem("COCKPIT_ROUTE_MASTER", JSON.stringify(ROUTE_MASTER));
+        }
+      } catch (e) {
+        console.log("Offline mode: using cached RouteMaster");
+      }
+    }
+
+    function loadMasterFromStorage() {
+      const saved = localStorage.getItem("COCKPIT_ROUTE_MASTER");
+      if (saved) {
+        try { ROUTE_MASTER = JSON.parse(saved); } catch (e) {}
+      }
+    }
+
+    function parseCSVToMaster(csvText) {
+      const rows = [];
+      let currentRow = [];
+      let currentCell = '';
+      let insideQuotes = false;
+
+      for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
+
+        if (char === '"') {
+          if (insideQuotes && nextChar === '"') {
+            currentCell += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (char === ',' && !insideQuotes) {
+          currentRow.push(currentCell.trim());
+          currentCell = '';
+        } else if ((char === '\r' || char === '\n') && !insideQuotes) {
+          if (char === '\r' && nextChar === '\n') i++;
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== '')) rows.push(currentRow);
+          currentRow = [];
+          currentCell = '';
+        } else {
+          currentCell += char;
+        }
+      }
+      if (currentCell || currentRow.length > 0) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== '')) rows.push(currentRow);
+      }
+
+      if (rows.length < 2) return {};
+
+      const headers = rows[0];
+      const master = {};
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = row[idx] || "";
+        });
+        if (obj.RouteKey) {
+          master[obj.RouteKey.toUpperCase()] = obj;
+        }
+      }
+      return master;
+    }
+
+    /* --- URLハッシュからのインポート処理 --- */
+    function checkUrlHashImport() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith("#data=")) {
+        try {
+          const encoded = hash.substring(6);
+          const jsonStr = decodeURIComponent(atob(encoded));
+          const rawLegs = JSON.parse(jsonStr);
+
+          // マスタデータ（ROUTE_MASTER）と結合
+          legsData = rawLegs.map(r => {
+            const master = ROUTE_MASTER[r.r] || {};
+            const parts = (r.r || "").split("-");
+            return {
+              FlightNo: r.f,
+              Dep: parts[0] || "",
+              Arr: parts[1] || "",
+              STD: r.s,
+              STA: r.a,
+              NextSTD: r.n,
+              ...master
+            };
+          });
+
+          currentLegIndex = 0;
+          saveToStorage();
+          history.replaceState(null, null, window.location.pathname);
+          alert("便データを正常に読み込みました！");
+          renderApp();
+        } catch (e) {
+          alert("データ展開エラー: " + e.message);
+        }
+      }
+    }
+
+    /* --- UI描画 --- */
+    function renderApp() {
+      if (!legsData || legsData.length === 0) {
+        document.getElementById("headFlightNo").textContent = "NO DATA";
+        document.getElementById("headRoute").textContent = "右上の [📱入力/QR] から登録";
+        return;
+      }
+
+      const leg = legsData[currentLegIndex] || {};
+      document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
+      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || "0'"}`;
+      document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z<br>STA ${leg.STA || '----'}Z`;
+
+      document.getElementById("prepNextSTD").textContent = `Next STD: ${leg.NextSTD || '----'}Z`;
+      document.getElementById("prepClearance").value = leg.ATC_Clearance || "";
+      document.getElementById("squawkDisplay").textContent = leg.Squawk || "----";
+      document.getElementById("totalPaxInput").value = leg.TotalPAX || "";
+      document.getElementById("com1Pri").textContent = leg.COM1_Pri || "---.--";
+      document.getElementById("com1Sec").textContent = leg.COM1_Sec || "---.--";
+      document.getElementById("com2Sec").textContent = leg.COM2_Sec || "---.--";
+      document.getElementById("accelHeight").textContent = `Accel Height: ${leg.AccelHeight || '----'}`;
+      document.getElementById("depCdu").textContent = leg.DepCDUSetup || "None";
+      document.getElementById("depFix").textContent = leg.DepFixPage || "None";
+      document.getElementById("depNotes").textContent = leg.DepNotes || "None";
+
+      document.getElementById("arrGate").textContent = leg.DescentGate || "None";
+      document.getElementById("termFreqs").textContent = leg.TerminalFreqs || "None";
+      document.getElementById("arrCdu").textContent = leg.ArrCDUSetup || "None";
+      document.getElementById("arrFix").textContent = leg.ArrFixPage || "None";
+      document.getElementById("lossCom").textContent = leg.LossCom || "None";
+      document.getElementById("arrNotes").textContent = leg.ArrNotes || "None";
+
+      const isIntl = String(leg.IsInternational).toUpperCase() === "TRUE";
+      document.getElementById("accCard").style.display = isIntl ? "block" : "none";
+      document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || "";
+
+      renderPaxList();
+      renderDrawerLegs();
+    }
+
+    function renderDrawerLegs() {
+      const container = document.getElementById("legButtons");
       container.innerHTML = "";
-      PAX_CODES.forEach(code => {
+      legsData.forEach((leg, i) => {
         const btn = document.createElement("button");
-        btn.className = "pax-code-btn";
-        btn.textContent = `+ ${code}`;
-        btn.onclick = () => addPaxCode(code);
+        btn.className = `leg-select-btn ${i === currentLegIndex ? 'active' : ''}`;
+        btn.innerHTML = `Leg ${i+1}: ${leg.FlightNo || '---'}<br><span style="font-size:15px; color:var(--text-sub);">${leg.Dep} ➔ ${leg.Arr}</span>`;
+        btn.onclick = () => {
+          currentLegIndex = i;
+          renderApp();
+          toggleDrawer();
+        };
         container.appendChild(btn);
       });
     }
@@ -488,67 +624,7 @@
       document.getElementById("overlay").classList.toggle("open");
     }
 
-    function renderApp() {
-      if (!legsData || legsData.length === 0) {
-        document.getElementById("headFlightNo").textContent = "NO DATA";
-        document.getElementById("headRoute").textContent = "Pullを実行してください";
-        return;
-      }
-
-      const leg = legsData[currentLegIndex] || {};
-      
-      // ヘッダー固定情報
-      document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
-      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || "0'"}`;
-      document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z<br>STA ${leg.STA || '----'}Z`;
-
-      // PRE-FLIGHT
-      document.getElementById("prepNextSTD").textContent = `Next STD: ${leg.NextSTD || '----'}Z`;
-      document.getElementById("prepClearance").value = leg.ATC_Clearance || leg.ExpectedClearance || "";
-      document.getElementById("squawkDisplay").textContent = leg.Squawk || "----";
-      document.getElementById("totalPaxInput").value = leg.TotalPAX || "";
-      document.getElementById("com1Pri").textContent = leg.COM1_Pri || "---.--";
-      document.getElementById("com1Sec").textContent = leg.COM1_Sec || "---.--";
-      document.getElementById("com2Sec").textContent = leg.COM2_Sec || "---.--";
-      document.getElementById("accelHeight").textContent = `Accel Height: ${leg.AccelHeight || '----'}`;
-      document.getElementById("depCdu").textContent = leg.DepCDUSetup || "None";
-      document.getElementById("depFix").textContent = leg.DepFixPage || "None";
-      document.getElementById("depNotes").textContent = leg.DepNotes || "None";
-
-      // IN-FLIGHT
-      document.getElementById("arrGate").textContent = leg.DescentGate || "None";
-      document.getElementById("termFreqs").textContent = leg.TerminalFreqs || "None";
-      document.getElementById("arrCdu").textContent = leg.ArrCDUSetup || "None";
-      document.getElementById("arrFix").textContent = leg.ArrFixPage || "None";
-      document.getElementById("lossCom").textContent = leg.LossCom || "None";
-      document.getElementById("arrNotes").textContent = leg.ArrNotes || "None";
-
-      // 国際線ACC
-      const isIntl = String(leg.IsInternational).toUpperCase() === "TRUE";
-      document.getElementById("accCard").style.display = isIntl ? "block" : "none";
-      document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || "";
-
-      renderPaxList();
-      renderDrawerLegs();
-    }
-
-    function renderDrawerLegs() {
-      const container = document.getElementById("legButtons");
-      container.innerHTML = "";
-      legsData.forEach((leg, i) => {
-        const btn = document.createElement("button");
-        btn.className = `leg-select-btn ${i === currentLegIndex ? 'active' : ''}`;
-        btn.innerHTML = `Leg ${i+1}: ${leg.FlightNo || '---'}<br><span style="font-size:16px; color:var(--text-sub);">${leg.Dep} ➔ ${leg.Arr}</span>`;
-        btn.onclick = () => {
-          currentLegIndex = i;
-          renderApp();
-          toggleDrawer();
-        };
-        container.appendChild(btn);
-      });
-    }
-
-    // スコーク入力テンキー (0-7)
+    /* --- スコークテンキー (0-7) --- */
     function pressOct(num) {
       if (octalBuffer.length < 4) {
         octalBuffer += num;
@@ -569,7 +645,18 @@
       }
     }
 
-    // Special PAX 制御
+    /* --- Special PAX --- */
+    function renderPaxButtons() {
+      const container = document.getElementById("paxButtonContainer");
+      container.innerHTML = "";
+      PAX_CODES.forEach(code => {
+        const btn = document.createElement("button");
+        btn.className = "pax-code-btn";
+        btn.textContent = `+ ${code}`;
+        btn.onclick = () => addPaxCode(code);
+        container.appendChild(btn);
+      });
+    }
     function addPaxCode(code) {
       const count = prompt(`${code} の人数を入力:`, "1");
       if (count && !isNaN(count)) {
@@ -620,69 +707,65 @@
       });
     }
 
-    // オフラインストレージ永続化
     function saveToStorage() {
       localStorage.setItem("COCKPIT_LEGS_DATA", JSON.stringify(legsData));
     }
     function loadFromStorage() {
       const local = localStorage.getItem("COCKPIT_LEGS_DATA");
-      if (local) {
-        legsData = JSON.parse(local);
-      }
+      if (local) legsData = JSON.parse(local);
     }
 
-    // 同期処理 (Pull / Push)
-    async function pullData() {
-      if (!confirm("スプレッドシートから当日のデータを取得しますか？")) return;
-      try {
-        const res = await fetch(GAS_URL);
-        const data = await res.json();
-        if (data.status === "success" && data.legs.length > 0) {
-          legsData = data.legs;
-          currentLegIndex = 0;
-          saveToStorage();
-          renderApp();
-          alert("データ取得完了");
-        } else {
-          alert("データが見つかりませんでした");
-        }
-      } catch (err) {
-        alert("同期失敗: " + err.message);
-      }
+    /* --- QRジェネレーター (スマホ入力画面) 制御 --- */
+    function openQrGenerator() {
+      document.getElementById("cockpitView").style.display = "none";
+      document.getElementById("qrGeneratorView").style.display = "block";
+      toggleDrawerOpen(false);
+      window.scrollTo(0, 0);
+    }
+    function closeQrGenerator() {
+      document.getElementById("qrGeneratorView").style.display = "none";
+      document.getElementById("cockpitView").style.display = "block";
+      renderApp();
+      window.scrollTo(0, 0);
+    }
+    function toggleDrawerOpen(force) {
+      document.getElementById("drawer").classList.remove("open");
+      document.getElementById("overlay").classList.remove("open");
     }
 
-    async function pushLogs() {
-      if (!confirm("記録したログをスプレッドシートに送信しますか？")) return;
-      try {
-        const payload = legsData.map(leg => {
-          const paxStr = (leg.specialPaxList || []).map(p => `${p.code}:${p.count}`).join(", ");
-          return {
-            FlightNo: leg.FlightNo,
-            Dep: leg.Dep,
-            Arr: leg.Arr,
-            STD: leg.STD,
-            STA: leg.STA,
-            Squawk: leg.Squawk || "",
-            TotalPAX: leg.TotalPAX || "",
-            SpecialPAX: paxStr,
-            ATC_Clearance: leg.ATC_Clearance || ""
-          };
-        });
-
-        const res = await fetch(GAS_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (result.status === "success") {
-          alert("ログ送信完了");
-        } else {
-          alert("送信エラー: " + result.message);
+    function generateFlightQR() {
+      const rawLegs = [];
+      for (let i = 1; i <= 3; i++) {
+        const f = document.getElementById(`in_f${i}`).value.trim();
+        const r = document.getElementById(`in_route${i}`).value.trim().toUpperCase();
+        const s = document.getElementById(`in_std${i}`).value.trim();
+        const a = document.getElementById(`in_sta${i}`).value.trim();
+        const n = document.getElementById(`in_next${i}`).value.trim();
+        if (f && r) {
+          rawLegs.push({ f: f, r: r, s: s, a: a, n: n });
         }
-      } catch (err) {
-        alert("送信失敗: " + err.message);
       }
+
+      if (rawLegs.length === 0) {
+        alert("少なくとも1便の便名と区間を入力してください");
+        return;
+      }
+
+      const jsonStr = JSON.stringify(rawLegs);
+      const encoded = btoa(encodeURIComponent(jsonStr));
+      const targetUrl = `${window.location.origin}${window.location.pathname}#data=${encoded}`;
+
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, {
+        text: targetUrl,
+        width: 250,
+        height: 250,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      document.getElementById("qrcodeArea").style.display = "flex";
+      document.getElementById("qrcodeArea").scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
