@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cockpit Assistant</title>
-  <!-- QRコード生成ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --bg-base: #1C1C1E;       /* Macメモ帳風ダーク */
       --bg-surface: #2C2C2E;    /* カード・ブロック */
-      --bg-highlight: #3A3A3C;  /* ボタン背景 */
-      --text-main: #F2F2F7;     /* メイン白文字 */
-      --text-sub: #8E8E93;      /* 補助グレー */
+      --bg-highlight: #3A3A3C;  /* ボタン・入力枠 */
+      --bg-inner: #151516;      /* 設定内容等の暗背景 */
+      --text-main: #F2F2F7;
+      --text-sub: #8E8E93;
       --accent: #E5A93C;        /* アンバー/ゴールド */
-      --accent-green: #30D158;  /* SETボタン用グリーン */
-      --accent-blue: #0A84FF;   /* タブ選択ブルー */
-      --accent-red: #FF453A;    /* 削除用レッド */
+      --accent-green: #30D158;
+      --accent-blue: #0A84FF;
+      --accent-red: #FF453A;
       --border: #48484A;
     }
 
@@ -33,22 +33,14 @@
 
     /* 固定ヘッダー */
     header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 75px;
+      position: fixed; top: 0; left: 0; right: 0; height: 75px;
       background-color: var(--bg-surface);
       border-bottom: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; z-index: 100;
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
-    .menu-btn {
-      background: none; border: none; color: var(--accent);
-      font-size: 30px; cursor: pointer; padding: 4px;
-    }
+    .menu-btn { background: none; border: none; color: var(--accent); font-size: 30px; cursor: pointer; padding: 4px; }
     .flight-title { font-size: 28px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
     .route-info { font-size: 19px; font-weight: 600; color: var(--accent); }
     .header-right { display: flex; align-items: center; gap: 12px; }
@@ -61,128 +53,141 @@
 
     /* タブ切り替えバー */
     .tab-bar {
-      position: fixed;
-      top: 75px; left: 0; right: 0;
-      height: 55px;
-      background-color: var(--bg-base);
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      z-index: 90;
+      position: fixed; top: 75px; left: 0; right: 0; height: 55px;
+      background-color: var(--bg-base); display: flex; border-bottom: 1px solid var(--border); z-index: 90;
     }
     .tab-btn {
-      flex: 1;
-      background: var(--bg-surface);
-      border: none;
-      border-bottom: 4px solid transparent;
-      color: var(--text-sub);
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
+      flex: 1; background: var(--bg-surface); border: none;
+      border-bottom: 4px solid transparent; color: var(--text-sub);
+      font-size: 20px; font-weight: bold; cursor: pointer;
     }
-    .tab-btn.active {
-      background: var(--bg-base);
-      color: #FFF;
-      border-bottom-color: var(--accent-blue);
-    }
+    .tab-btn.active { background: var(--bg-base); color: #FFF; border-bottom-color: var(--accent-blue); }
 
     /* メインコンテンツ */
-    main {
-      padding: 145px 16px 40px 16px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
+    main { padding: 145px 16px 40px 16px; max-width: 900px; margin: 0 auto; }
     .card {
-      background-color: var(--bg-surface);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
+      background-color: var(--bg-surface); border-radius: 12px;
+      padding: 16px; margin-bottom: 16px; border: 1px solid var(--border);
     }
     .section-title {
-      font-size: 15px;
-      font-weight: bold;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 10px;
+      font-size: 15px; font-weight: bold; color: var(--text-sub);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
     }
 
-    /* 強調ゲート表示 */
+    /* 降下ゲート（サイズ最適化・強調枠） */
     .gate-highlight {
-      font-size: 32px;
-      font-weight: 900;
-      color: #FFF;
-      background: #3A2E16;
-      border: 2px solid var(--accent);
-      padding: 16px;
-      border-radius: 10px;
-      text-align: center;
-      margin: 10px 0;
+      font-size: 21px; font-weight: 800; color: #FFF;
+      background: #3A2E16; border: 1.5px solid var(--accent);
+      padding: 12px 16px; border-radius: 8px; text-align: center;
+      margin: 8px 0; letter-spacing: 0.5px;
     }
 
     /* 周波数グリッド */
-    .freq-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px;
-    }
-    .freq-box {
-      background: var(--bg-highlight);
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-      font-family: monospace;
-    }
+    .freq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .freq-box { background: var(--bg-highlight); padding: 12px; border-radius: 8px; text-align: center; font-family: monospace; }
     .freq-label { font-size: 13px; color: var(--text-sub); }
     .freq-val { font-size: 22px; font-weight: bold; color: #FFF; }
 
-    textarea, input[type="text"], input[type="number"] {
-      width: 100%;
-      background: #151516;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #FFF;
-      font-size: 18px;
-      padding: 12px;
-      font-family: monospace;
+    /* 設定・Fixヒントの視認性強調スタイル */
+    .field-group { margin-bottom: 14px; }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label-badge {
+      display: inline-block; background: #382E18; color: var(--accent);
+      padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 800;
+      border: 1px solid rgba(229, 169, 60, 0.4); margin-bottom: 6px; letter-spacing: 0.5px;
+    }
+    .field-content-box {
+      background: var(--bg-inner); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px; font-family: monospace;
+      font-size: 17px; color: #FFF; white-space: pre-wrap; line-height: 1.5;
     }
 
-    /* スコーク専用 8進テンキー */
+    /* テキスト入力（クリアランス用） */
+    textarea {
+      width: 100%; background: var(--bg-inner); border: 1px solid var(--border);
+      border-radius: 8px; color: #FFF; font-size: 18px; padding: 12px;
+      font-family: monospace; line-height: 1.4; resize: vertical;
+    }
+
+    /* スコーク専用 3×3 キーパッド (0-7, 即時確定) */
     .keypad-container { display: flex; gap: 16px; flex-wrap: wrap; }
     .keypad-display {
-      flex: 1; min-width: 200px;
-      background: #000; border: 2px solid var(--accent);
-      border-radius: 10px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 12px;
+      flex: 1; min-width: 180px; background: #000;
+      border: 2px solid var(--accent); border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px;
     }
     .squawk-val { font-family: monospace; font-size: 46px; font-weight: 900; letter-spacing: 6px; color: var(--accent); }
-    .keypad-keys {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-      flex: 1.5; min-width: 260px;
+    .keypad-keys-octal {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      flex: 1.2; min-width: 220px;
     }
     .key-btn {
       background: var(--bg-highlight); border: 1px solid var(--border);
-      color: #FFF; font-size: 24px; font-weight: bold; padding: 12px 0;
-      border-radius: 8px; cursor: pointer;
+      color: #FFF; font-size: 24px; font-weight: bold; padding: 14px 0;
+      border-radius: 8px; cursor: pointer; text-align: center;
     }
     .key-btn:active { background: #555; }
-    .key-btn.set { grid-column: span 2; background: var(--accent-green); color: #000; font-size: 20px; }
     .key-btn.clr { background: #442; color: #F88; }
+
+    /* PAX タップ入力枠 */
+    .pax-tap-display {
+      background: var(--bg-inner); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 14px 18px; display: flex;
+      justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .pax-tap-val { font-family: monospace; font-size: 28px; font-weight: 900; color: #FFF; }
+    .pax-tap-hint { font-size: 14px; color: var(--accent); }
 
     /* PAX 選択ボタン群 */
     .pax-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .pax-code-btn {
       background: var(--bg-highlight); border: 1px solid var(--border);
-      color: #FFF; padding: 8px 12px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer;
+      color: #FFF; padding: 10px 14px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer;
     }
     .pax-code-btn:active { background: var(--accent); color: #000; }
     .pax-list-item {
       display: flex; justify-content: space-between; align-items: center;
       background: var(--bg-highlight); padding: 10px 14px; border-radius: 6px; margin-bottom: 6px;
     }
-    .del-btn { background: var(--accent-red); color: #FFF; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+    .del-btn { background: var(--accent-red); color: #FFF; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+    /* 電卓風テンキーポップアップ（Modal Keypad） */
+    .modal-overlay {
+      position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.7); z-index: 300; display: none;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: var(--bg-surface); border: 2px solid var(--border);
+      border-radius: 14px; width: 100%; max-width: 320px; padding: 18px;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .modal-title { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .modal-display {
+      background: #000; border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; font-family: monospace; font-size: 36px; font-weight: bold;
+      color: #FFF; text-align: right; margin-bottom: 14px; min-height: 44px;
+    }
+    .modal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .mkey {
+      background: var(--bg-highlight); border: 1px solid var(--border);
+      color: #FFF; font-size: 26px; font-weight: bold; padding: 14px 0;
+      border-radius: 8px; cursor: pointer; text-align: center;
+    }
+    .mkey:active { background: #555; }
+    .mkey.c { color: #FFA0A0; }
+    .mkey.bs { color: var(--accent); font-size: 22px; }
+    .mkey.ok { grid-column: span 3; background: var(--accent-green); color: #000; font-size: 22px; margin-top: 4px; padding: 14px 0; }
+
+    /* トースト通知 */
+    #toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #333; color: #FFF; padding: 10px 20px; border-radius: 20px;
+      font-size: 16px; font-weight: bold; border: 1px solid var(--accent);
+      opacity: 0; transition: opacity 0.25s ease; z-index: 500; pointer-events: none;
+    }
+    #toast.show { opacity: 1; }
 
     /* サイドバー・ドロワー */
     .drawer {
@@ -199,9 +204,7 @@
     }
     .leg-select-btn.active { border-color: var(--accent); background: #332B1A; }
 
-    .raw-text { white-space: pre-wrap; font-family: monospace; font-size: 16px; }
-
-    /* QRジェネレーター（スマホ用画面）スタイル */
+    /* QRジェネレーター（スマホ用画面） */
     #qrGeneratorView { display: none; padding: 20px 16px; max-width: 600px; margin: 0 auto; }
     .leg-input-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
     .leg-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
@@ -253,11 +256,6 @@
       <!-- PRE-FLIGHT タブ -->
       <div id="tabPrepContent">
         <div class="card">
-          <div class="section-title">Next Leg Information</div>
-          <div style="font-size: 22px; font-weight:bold; color:var(--accent);" id="prepNextSTD">Next STD: ----Z</div>
-        </div>
-
-        <div class="card">
           <div class="section-title">ATC Clearance (Notes)</div>
           <textarea id="prepClearance" rows="3" placeholder="Cleared to..."></textarea>
         </div>
@@ -269,8 +267,8 @@
               <div style="font-size:13px; color:var(--text-sub);">CURRENT SQUAWK</div>
               <div class="squawk-val" id="squawkDisplay">----</div>
             </div>
-            <div class="keypad-keys">
-              <button class="key-btn" onclick="pressOct('0')">0</button>
+            <!-- 3×3配置 (0-7 + CLR, 4桁で自動確定) -->
+            <div class="keypad-keys-octal">
               <button class="key-btn" onclick="pressOct('1')">1</button>
               <button class="key-btn" onclick="pressOct('2')">2</button>
               <button class="key-btn" onclick="pressOct('3')">3</button>
@@ -278,21 +276,24 @@
               <button class="key-btn" onclick="pressOct('5')">5</button>
               <button class="key-btn" onclick="pressOct('6')">6</button>
               <button class="key-btn" onclick="pressOct('7')">7</button>
+              <button class="key-btn" onclick="pressOct('0')">0</button>
               <button class="key-btn clr" onclick="clearOct()">CLR</button>
-              <button class="key-btn set" onclick="setSquawk()">SET</button>
             </div>
           </div>
         </div>
 
         <div class="card">
           <div class="section-title">Total Passengers</div>
-          <input type="number" id="totalPaxInput" placeholder="確定搭乗者数">
+          <div class="pax-tap-display" onclick="openTotalPaxKeypad()">
+            <span class="pax-tap-val" id="totalPaxDisplay">---</span>
+            <span class="pax-tap-hint">タップして入力 ➔</span>
+          </div>
         </div>
 
         <div class="card">
           <div class="section-title">Special Passenger Entry</div>
           <div class="pax-buttons" id="paxButtonContainer"></div>
-          <button class="pax-code-btn" style="background:#4A3F20;" onclick="addFreePax()">+ Free Entry</button>
+          <button class="pax-code-btn" style="background:#4A3F20;" onclick="openFreePaxModal()">+ Free Entry</button>
           <div style="margin-top:14px;" id="paxListContainer"></div>
         </div>
 
@@ -308,18 +309,31 @@
 
         <div class="card">
           <div class="section-title">Departure Setup & Fix Hints</div>
-          <div style="margin-bottom:8px; font-weight:bold; color:var(--accent);" id="accelHeight">Accel Height: ----</div>
-          <div style="font-weight:bold; margin-top:10px;">CDU Setup (DEP):</div>
-          <div class="raw-text" id="depCdu">--</div>
-          <div style="font-weight:bold; margin-top:10px;">Fix Page (DEP):</div>
-          <div class="raw-text" id="depFix">--</div>
-          <div style="font-weight:bold; margin-top:10px;">DEP Notes:</div>
-          <div class="raw-text" id="depNotes">--</div>
+          <div style="margin-bottom:12px; font-weight:bold; color:var(--accent);" id="accelHeight">Accel Height: ----</div>
+
+          <div class="field-group">
+            <div class="field-label-badge">CDU SETUP (DEP)</div>
+            <div class="field-content-box" id="depCdu">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label-badge">FIX PAGE (DEP)</div>
+            <div class="field-content-box" id="depFix">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label-badge">DEP NOTES</div>
+            <div class="field-content-box" id="depNotes">--</div>
+          </div>
         </div>
       </div>
 
       <!-- IN-FLIGHT / ARR タブ -->
       <div id="tabInflightContent" style="display:none;">
+        <!-- Next Leg (次の便が存在する場合のみ自動表示) -->
+        <div class="card" id="nextLegCard" style="display:none; border-color:var(--accent);">
+          <div class="section-title" style="color:var(--accent);">Next Leg Information</div>
+          <div style="font-size: 22px; font-weight:bold; color:#FFF;" id="nextLegInfo">JL --- (STD ----Z)</div>
+        </div>
+
         <div class="card">
           <div class="section-title">Descent Mandatory Gate</div>
           <div class="gate-highlight" id="arrGate">---</div>
@@ -327,37 +341,69 @@
 
         <div class="card">
           <div class="section-title">Terminal Frequencies</div>
-          <div class="raw-text" id="termFreqs" style="font-size:20px; font-weight:bold;">--</div>
+          <div class="field-content-box" id="termFreqs" style="font-size:20px; font-weight:bold;">--</div>
         </div>
 
         <div class="card" id="accCard" style="display:none;">
           <div class="section-title" style="color:var(--accent);">Enroute ACC (International)</div>
-          <div class="raw-text" id="enrouteAcc">--</div>
+          <div class="field-content-box" id="enrouteAcc">--</div>
         </div>
 
         <div class="card">
-          <div class="section-title">CDU Setup & Fix Hints (Arrival)</div>
-          <div style="font-weight:bold;">CDU Setup (ARR):</div>
-          <div class="raw-text" id="arrCdu">--</div>
-          <div style="font-weight:bold; margin-top:10px;">Fix Page (ARR):</div>
-          <div class="raw-text" id="arrFix">--</div>
+          <div class="section-title">Arrival Setup & Fix Hints</div>
+          <div class="field-group">
+            <div class="field-label-badge">CDU SETUP (ARR)</div>
+            <div class="field-content-box" id="arrCdu">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label-badge">FIX PAGE (ARR)</div>
+            <div class="field-content-box" id="arrFix">--</div>
+          </div>
         </div>
 
         <div class="card">
           <div class="section-title">Loss Communication Procedure</div>
-          <div class="raw-text" id="lossCom" style="color:#FFA0A0;">--</div>
+          <div class="field-content-box" id="lossCom" style="color:#FFA0A0;">--</div>
         </div>
 
         <div class="card">
           <div class="section-title">Arrival Notes & Airport Info</div>
-          <div class="raw-text" id="arrNotes">--</div>
+          <div class="field-content-box" id="arrNotes">--</div>
         </div>
       </div>
     </main>
   </div>
 
+  <!-- ==================== 2. 電卓風テンキーポップアップ ==================== -->
+  <div id="keypadModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modalKeypadTitle">PAX 入力</div>
+        <button style="background:none; border:none; color:#AAA; font-size:24px; cursor:pointer;" onclick="closeModalKeypad()">✕</button>
+      </div>
+      <div class="modal-display" id="modalDisplay">0</div>
+      <div class="modal-grid">
+        <button class="mkey" onclick="pressMKey('1')">1</button>
+        <button class="mkey" onclick="pressMKey('2')">2</button>
+        <button class="mkey" onclick="pressMKey('3')">3</button>
+        <button class="mkey" onclick="pressMKey('4')">4</button>
+        <button class="mkey" onclick="pressMKey('5')">5</button>
+        <button class="mkey" onclick="pressMKey('6')">6</button>
+        <button class="mkey" onclick="pressMKey('7')">7</button>
+        <button class="mkey" onclick="pressMKey('8')">8</button>
+        <button class="mkey" onclick="pressMKey('9')">9</button>
+        <button class="mkey c" onclick="clearMKey()">C</button>
+        <button class="mkey" onclick="pressMKey('0')">0</button>
+        <button class="mkey bs" onclick="backspaceMKey()">⌫</button>
+        <button class="mkey ok" onclick="submitModalKeypad()">確定</button>
+      </div>
+    </div>
+  </div>
 
-  <!-- ==================== 2. スマホ用QR生成画面 ==================== -->
+  <!-- トースト通知 -->
+  <div id="toast"></div>
+
+  <!-- ==================== 3. スマホ用QR生成画面 ==================== -->
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <h2 style="margin:0; color:var(--accent);">Flight QR Generator</h2>
@@ -372,7 +418,6 @@
         <input type="text" id="in_std1" placeholder="STD (例: 0130)">
         <input type="text" id="in_sta1" placeholder="STA (例: 0305)">
       </div>
-      <input type="text" id="in_next1" placeholder="Next STD (例: 0415)" style="margin-top:8px;">
     </div>
 
     <div class="leg-input-card">
@@ -383,7 +428,6 @@
         <input type="text" id="in_std2" placeholder="STD (例: 0415)">
         <input type="text" id="in_sta2" placeholder="STA (例: 0555)">
       </div>
-      <input type="text" id="in_next2" placeholder="Next STD" style="margin-top:8px;">
     </div>
 
     <div class="leg-input-card">
@@ -394,7 +438,6 @@
         <input type="text" id="in_std3" placeholder="STD">
         <input type="text" id="in_sta3" placeholder="STA">
       </div>
-      <input type="text" id="in_next3" placeholder="Next STD" style="margin-top:8px;">
     </div>
 
     <button class="btn-main" onclick="generateFlightQR()">QRコードを生成する</button>
@@ -407,7 +450,6 @@
     </div>
   </div>
 
-
   <script>
     let ROUTE_MASTER = {};
     const PAX_CODES = ["INFT","WCHC","WCHS","WCHR","CVIP","MEDA","DEAF","BLND","DPNA","INCP","PRGN","MAMA","PRSN","UMNR","INAD","DEPO","STCR"];
@@ -416,34 +458,28 @@
     let legsData = [];
     let octalBuffer = "";
 
+    // テンキーモーダル状態
+    let modalMode = null; // 'TOTAL_PAX' or 'SPECIAL_PAX' or 'FREE_PAX'
+    let modalTargetCode = "";
+    let modalBuffer = "";
+
     window.addEventListener("DOMContentLoaded", async () => {
-      // 1. 保存済みマスタのロード
       loadMasterFromStorage();
-
-      // 2. GitHub上の最新 routes.csv 取得（オンライン時のみ）
       await fetchLatestCsvMaster();
-
-      // 3. URLハッシュ (#data=...) からの自動インポート検知 (iPad標準カメラ経由)
       checkUrlHashImport();
-
-      // 4. ローカル便データのロードと描画
       loadFromStorage();
       renderPaxButtons();
       renderApp();
       bindInputEvents();
 
-      // スマホ画面サイズかつデータなし時は入力画面を自動表示
       if (window.innerWidth < 500 && (!legsData || legsData.length === 0)) {
         openQrGenerator();
       }
     });
 
-    // 画面遷移なしでハッシュが変わった場合（カメラ読み込みでSafariが開いたままの場合）の検知
-    window.addEventListener("hashchange", () => {
-      checkUrlHashImport();
-    });
+    window.addEventListener("hashchange", () => checkUrlHashImport());
 
-    /* --- CSVマスタの取得とパース --- */
+    /* --- CSVマスタ取得 --- */
     async function fetchLatestCsvMaster() {
       try {
         const res = await fetch("./routes.csv", { cache: "no-cache" });
@@ -477,21 +513,15 @@
         const nextChar = csvText[i + 1];
 
         if (char === '"') {
-          if (insideQuotes && nextChar === '"') {
-            currentCell += '"';
-            i++;
-          } else {
-            insideQuotes = !insideQuotes;
-          }
+          if (insideQuotes && nextChar === '"') { currentCell += '"'; i++; }
+          else { insideQuotes = !insideQuotes; }
         } else if (char === ',' && !insideQuotes) {
-          currentRow.push(currentCell.trim());
-          currentCell = '';
+          currentRow.push(currentCell.trim()); currentCell = '';
         } else if ((char === '\r' || char === '\n') && !insideQuotes) {
           if (char === '\r' && nextChar === '\n') i++;
           currentRow.push(currentCell.trim());
           if (currentRow.some(c => c !== '')) rows.push(currentRow);
-          currentRow = [];
-          currentCell = '';
+          currentRow = []; currentCell = '';
         } else {
           currentCell += char;
         }
@@ -500,18 +530,14 @@
         currentRow.push(currentCell.trim());
         if (currentRow.some(c => c !== '')) rows.push(currentRow);
       }
-
       if (rows.length < 2) return {};
 
       const headers = rows[0];
       const master = {};
-
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
         const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = row[idx] || "";
-        });
+        headers.forEach((h, idx) => { obj[h] = row[idx] || ""; });
         if (obj.RouteKey) {
           master[obj.RouteKey.toUpperCase()] = obj;
         }
@@ -519,7 +545,7 @@
       return master;
     }
 
-    /* --- URLハッシュからのインポート処理 --- */
+    /* --- URLハッシュからのインポート --- */
     function checkUrlHashImport() {
       const hash = window.location.hash;
       if (hash && hash.startsWith("#data=")) {
@@ -528,7 +554,6 @@
           const jsonStr = decodeURIComponent(atob(encoded));
           const rawLegs = JSON.parse(jsonStr);
 
-          // マスタデータ（ROUTE_MASTER）と結合
           legsData = rawLegs.map(r => {
             const master = ROUTE_MASTER[r.r] || {};
             const parts = (r.r || "").split("-");
@@ -538,7 +563,7 @@
               Arr: parts[1] || "",
               STD: r.s,
               STA: r.a,
-              NextSTD: r.n,
+              ATC_Clearance: master.ExpectedClearance || "", // マスタから自動挿入
               ...master
             };
           });
@@ -546,7 +571,7 @@
           currentLegIndex = 0;
           saveToStorage();
           history.replaceState(null, null, window.location.pathname);
-          alert("便データを正常に読み込みました！");
+          showToast("便データを正常に読み込みました");
           renderApp();
         } catch (e) {
           alert("データ展開エラー: " + e.message);
@@ -567,10 +592,12 @@
       document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || "0'"}`;
       document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z<br>STA ${leg.STA || '----'}Z`;
 
-      document.getElementById("prepNextSTD").textContent = `Next STD: ${leg.NextSTD || '----'}Z`;
       document.getElementById("prepClearance").value = leg.ATC_Clearance || "";
       document.getElementById("squawkDisplay").textContent = leg.Squawk || "----";
-      document.getElementById("totalPaxInput").value = leg.TotalPAX || "";
+      octalBuffer = leg.Squawk || "";
+
+      document.getElementById("totalPaxDisplay").textContent = leg.TotalPAX || "---";
+
       document.getElementById("com1Pri").textContent = leg.COM1_Pri || "---.--";
       document.getElementById("com1Sec").textContent = leg.COM1_Sec || "---.--";
       document.getElementById("com2Sec").textContent = leg.COM2_Sec || "---.--";
@@ -578,6 +605,16 @@
       document.getElementById("depCdu").textContent = leg.DepCDUSetup || "None";
       document.getElementById("depFix").textContent = leg.DepFixPage || "None";
       document.getElementById("depNotes").textContent = leg.DepNotes || "None";
+
+      // Next Leg (IN-FLIGHTタブ): 次レグが存在すれば自動表示、なければ非表示
+      const nextLeg = legsData[currentLegIndex + 1];
+      const nextLegCard = document.getElementById("nextLegCard");
+      if (nextLeg && nextLeg.FlightNo) {
+        nextLegCard.style.display = "block";
+        document.getElementById("nextLegInfo").textContent = `${nextLeg.FlightNo} (STD ${nextLeg.STD || '----'}Z)`;
+      } else {
+        nextLegCard.style.display = "none";
+      }
 
       document.getElementById("arrGate").textContent = leg.DescentGate || "None";
       document.getElementById("termFreqs").textContent = leg.TerminalFreqs || "None";
@@ -624,28 +661,103 @@
       document.getElementById("overlay").classList.toggle("open");
     }
 
-    /* --- スコークテンキー (0-7) --- */
+    /* --- スコークキーパッド (0-7, 4桁で即時保存) --- */
     function pressOct(num) {
-      if (octalBuffer.length < 4) {
-        octalBuffer += num;
-        document.getElementById("squawkDisplay").textContent = octalBuffer.padEnd(4, "-");
-      }
-    }
-    function clearOct() {
-      octalBuffer = "";
-      document.getElementById("squawkDisplay").textContent = "----";
-    }
-    function setSquawk() {
+      if (octalBuffer.length >= 4) octalBuffer = ""; // 既に4桁なら上書き開始
+      octalBuffer += num;
+      document.getElementById("squawkDisplay").textContent = octalBuffer.padEnd(4, "-");
+      
       if (octalBuffer.length === 4) {
         legsData[currentLegIndex].Squawk = octalBuffer;
         saveToStorage();
-        alert(`Squawk ${octalBuffer} SET`);
-      } else {
-        alert("4桁入力してください");
+        showToast(`Squawk ${octalBuffer} SET`);
       }
     }
 
-    /* --- Special PAX --- */
+    function clearOct() {
+      octalBuffer = "";
+      document.getElementById("squawkDisplay").textContent = "----";
+      if (legsData[currentLegIndex]) {
+        legsData[currentLegIndex].Squawk = "";
+        saveToStorage();
+      }
+    }
+
+    /* --- 電卓風テンキーモーダル制御 --- */
+    function openTotalPaxKeypad() {
+      modalMode = 'TOTAL_PAX';
+      document.getElementById("modalKeypadTitle").textContent = "Total PAX 入力";
+      modalBuffer = legsData[currentLegIndex]?.TotalPAX || "";
+      updateModalDisplay();
+      document.getElementById("keypadModal").classList.add("open");
+    }
+
+    function openSpecialPaxKeypad(code) {
+      modalMode = 'SPECIAL_PAX';
+      modalTargetCode = code;
+      document.getElementById("modalKeypadTitle").textContent = `${code} 人数入力`;
+      modalBuffer = "";
+      updateModalDisplay();
+      document.getElementById("keypadModal").classList.add("open");
+    }
+
+    function openFreePaxModal() {
+      const desc = prompt("Free Entry (内容を入力):", "");
+      if (desc) {
+        modalMode = 'FREE_PAX';
+        modalTargetCode = desc;
+        document.getElementById("modalKeypadTitle").textContent = `人数入力: ${desc}`;
+        modalBuffer = "";
+        updateModalDisplay();
+        document.getElementById("keypadModal").classList.add("open");
+      }
+    }
+
+    function closeModalKeypad() {
+      document.getElementById("keypadModal").classList.remove("open");
+    }
+
+    function pressMKey(num) {
+      if (modalBuffer.length < 4) {
+        modalBuffer += num;
+        updateModalDisplay();
+      }
+    }
+
+    function clearMKey() {
+      modalBuffer = "";
+      updateModalDisplay();
+    }
+
+    function backspaceMKey() {
+      modalBuffer = modalBuffer.slice(0, -1);
+      updateModalDisplay();
+    }
+
+    function updateModalDisplay() {
+      document.getElementById("modalDisplay").textContent = modalBuffer || "0";
+    }
+
+    function submitModalKeypad() {
+      const val = parseInt(modalBuffer, 10);
+      if (modalMode === 'TOTAL_PAX') {
+        legsData[currentLegIndex].TotalPAX = isNaN(val) ? "" : String(val);
+        saveToStorage();
+        document.getElementById("totalPaxDisplay").textContent = legsData[currentLegIndex].TotalPAX || "---";
+      } else if (modalMode === 'SPECIAL_PAX' || modalMode === 'FREE_PAX') {
+        const count = isNaN(val) ? 1 : val;
+        if (!legsData[currentLegIndex].specialPaxList) legsData[currentLegIndex].specialPaxList = [];
+        legsData[currentLegIndex].specialPaxList.push({
+          code: modalTargetCode,
+          count: count
+        });
+        saveToStorage();
+        renderPaxList();
+      }
+      closeModalKeypad();
+    }
+
+    /* --- Special PAX リスト --- */
     function renderPaxButtons() {
       const container = document.getElementById("paxButtonContainer");
       container.innerHTML = "";
@@ -653,33 +765,17 @@
         const btn = document.createElement("button");
         btn.className = "pax-code-btn";
         btn.textContent = `+ ${code}`;
-        btn.onclick = () => addPaxCode(code);
+        btn.onclick = () => openSpecialPaxKeypad(code);
         container.appendChild(btn);
       });
     }
-    function addPaxCode(code) {
-      const count = prompt(`${code} の人数を入力:`, "1");
-      if (count && !isNaN(count)) {
-        if (!legsData[currentLegIndex].specialPaxList) legsData[currentLegIndex].specialPaxList = [];
-        legsData[currentLegIndex].specialPaxList.push({ code: code, count: count });
-        saveToStorage();
-        renderPaxList();
-      }
-    }
-    function addFreePax() {
-      const text = prompt("Free Entry (内容と人数):", "");
-      if (text) {
-        if (!legsData[currentLegIndex].specialPaxList) legsData[currentLegIndex].specialPaxList = [];
-        legsData[currentLegIndex].specialPaxList.push({ code: "Free", count: text });
-        saveToStorage();
-        renderPaxList();
-      }
-    }
+
     function removePax(idx) {
       legsData[currentLegIndex].specialPaxList.splice(idx, 1);
       saveToStorage();
       renderPaxList();
     }
+
     function renderPaxList() {
       const list = document.getElementById("paxListContainer");
       list.innerHTML = "";
@@ -687,7 +783,7 @@
       currentList.forEach((item, i) => {
         const row = document.createElement("div");
         row.className = "pax-list-item";
-        row.innerHTML = `<span><b>${item.code}</b>: ${item.count}</span> <button class="del-btn" onclick="removePax(${i})">削除</button>`;
+        row.innerHTML = `<span><b>${item.code}</b>: ${item.count} 名</span> <button class="del-btn" onclick="removePax(${i})">削除</button>`;
         list.appendChild(row);
       });
     }
@@ -696,12 +792,6 @@
       document.getElementById("prepClearance").addEventListener("input", (e) => {
         if (legsData[currentLegIndex]) {
           legsData[currentLegIndex].ATC_Clearance = e.target.value;
-          saveToStorage();
-        }
-      });
-      document.getElementById("totalPaxInput").addEventListener("input", (e) => {
-        if (legsData[currentLegIndex]) {
-          legsData[currentLegIndex].TotalPAX = e.target.value;
           saveToStorage();
         }
       });
@@ -715,11 +805,19 @@
       if (local) legsData = JSON.parse(local);
     }
 
-    /* --- QRジェネレーター (スマホ入力画面) 制御 --- */
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1500);
+    }
+
+    /* --- QRジェネレーター (Next STD手動入力を廃止・簡略化) --- */
     function openQrGenerator() {
       document.getElementById("cockpitView").style.display = "none";
       document.getElementById("qrGeneratorView").style.display = "block";
-      toggleDrawerOpen(false);
+      document.getElementById("drawer").classList.remove("open");
+      document.getElementById("overlay").classList.remove("open");
       window.scrollTo(0, 0);
     }
     function closeQrGenerator() {
@@ -727,10 +825,6 @@
       document.getElementById("cockpitView").style.display = "block";
       renderApp();
       window.scrollTo(0, 0);
-    }
-    function toggleDrawerOpen(force) {
-      document.getElementById("drawer").classList.remove("open");
-      document.getElementById("overlay").classList.remove("open");
     }
 
     function generateFlightQR() {
@@ -740,9 +834,8 @@
         const r = document.getElementById(`in_route${i}`).value.trim().toUpperCase();
         const s = document.getElementById(`in_std${i}`).value.trim();
         const a = document.getElementById(`in_sta${i}`).value.trim();
-        const n = document.getElementById(`in_next${i}`).value.trim();
         if (f && r) {
-          rawLegs.push({ f: f, r: r, s: s, a: a, n: n });
+          rawLegs.push({ f: f, r: r, s: s, a: a });
         }
       }
 
