@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cockpit Assistant</title>
+  <!-- 外部CDNではなくリポジトリ内のローカルスクリプトを参照 -->
   <script src="./qrcode.min.js"></script>
   <style>
     :root {
@@ -44,7 +45,7 @@
     .flight-title { font-size: 28px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
     .route-info { font-size: 19px; font-weight: 600; color: var(--accent); }
     .header-right { display: flex; align-items: center; gap: 12px; }
-    .header-times { font-size: 18px; font-family: monospace; font-weight: bold; text-align: right; }
+    .header-times { font-size: 17px; font-family: monospace; font-weight: bold; text-align: right; line-height: 1.25; }
     .mode-toggle-btn {
       background: var(--bg-highlight); border: 1px solid var(--accent);
       color: var(--accent); padding: 6px 10px; border-radius: 6px;
@@ -232,6 +233,7 @@
         </div>
       </div>
       <div class="header-right">
+        <!-- STD / STA (国際線時は時差を自動付与) -->
         <div class="header-times" id="headTimes">STD ----Z<br>STA ----Z</div>
         <button class="mode-toggle-btn" onclick="openQrGenerator()">📱入力/QR</button>
       </div>
@@ -268,7 +270,6 @@
               <div style="font-size:13px; color:var(--text-sub);">CURRENT SQUAWK</div>
               <div class="squawk-val" id="squawkDisplay">----</div>
             </div>
-            <!-- 3×3配置 (0-7 + CLR, 4桁で即時保存) -->
             <div class="keypad-keys-octal">
               <button class="key-btn" onclick="pressOct('1')">1</button>
               <button class="key-btn" onclick="pressOct('2')">2</button>
@@ -329,7 +330,6 @@
 
       <!-- IN-FLIGHT / ARR タブ -->
       <div id="tabInflightContent" style="display:none;">
-        <!-- Next Leg (次の便が存在する場合のみ自動表示) -->
         <div class="card" id="nextLegCard" style="display:none; border-color:var(--accent);">
           <div class="section-title" style="color:var(--accent);">Next Leg Information</div>
           <div style="font-size: 22px; font-weight:bold; color:#FFF;" id="nextLegInfo">JL --- (STD ----Z)</div>
@@ -401,39 +401,35 @@
     </div>
   </div>
 
-  <!-- トースト通知 -->
   <div id="toast"></div>
 
-  <!-- ==================== 3. スマホ用QR生成画面 (Leg 1〜4対応 / Next STD撤去) ==================== -->
+  <!-- ==================== 3. スマホ用QR生成画面 ==================== -->
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <h2 style="margin:0; color:var(--accent);">Flight QR Generator</h2>
       <button class="mode-toggle-btn" onclick="closeQrGenerator()">✕ 閉じる</button>
     </div>
 
-    <!-- Leg 1 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 1</div>
       <div class="leg-input-grid">
         <input type="text" id="in_f1" placeholder="便名 (例: JL123)">
-        <input type="text" id="in_route1" placeholder="区間 (例: HND-CTS)">
+        <input type="text" id="in_route1" placeholder="区間 (例: HND-SIN)">
         <input type="text" id="in_std1" placeholder="STD (例: 0130)">
-        <input type="text" id="in_sta1" placeholder="STA (例: 0305)">
+        <input type="text" id="in_sta1" placeholder="STA (例: 0735)">
       </div>
     </div>
 
-    <!-- Leg 2 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 2 (任意)</div>
       <div class="leg-input-grid">
         <input type="text" id="in_f2" placeholder="便名 (例: JL126)">
-        <input type="text" id="in_route2" placeholder="区間 (例: CTS-HND)">
-        <input type="text" id="in_std2" placeholder="STD (例: 0415)">
-        <input type="text" id="in_sta2" placeholder="STA (例: 0555)">
+        <input type="text" id="in_route2" placeholder="区間 (例: SIN-HND)">
+        <input type="text" id="in_std2" placeholder="STD">
+        <input type="text" id="in_sta2" placeholder="STA">
       </div>
     </div>
 
-    <!-- Leg 3 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 3 (任意)</div>
       <div class="leg-input-grid">
@@ -444,7 +440,6 @@
       </div>
     </div>
 
-    <!-- Leg 4 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 4 (任意)</div>
       <div class="leg-input-grid">
@@ -473,7 +468,6 @@
     let legsData = [];
     let octalBuffer = "";
 
-    // テンキーモーダル状態
     let modalMode = null;
     let modalTargetCode = "";
     let modalBuffer = "";
@@ -580,7 +574,7 @@
               Arr: parts[1] || "",
               STD: r.s,
               STA: r.a,
-              ATC_Clearance: master.ExpectedClearance || "", // マスタから初期代入
+              ATC_Clearance: master.ExpectedClearance || "",
               ...master
             };
           });
@@ -594,6 +588,17 @@
           alert("データ展開エラー: " + e.message);
         }
       }
+    }
+
+    /* --- 時差文字列のフォーマット (+9, -5 など) --- */
+    function formatTzOffset(val) {
+      if (val === undefined || val === null) return "";
+      let s = String(val).trim();
+      if (!s) return "";
+      if (!s.startsWith("+") && !s.startsWith("-")) {
+        s = "+" + s;
+      }
+      return ` (${s})`;
     }
 
     /* --- UI描画 --- */
@@ -610,15 +615,19 @@
 
       document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
       document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
-      document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z<br>STA ${leg.STA || '----'}Z`;
 
-      // ★ ATC Clearance の動的フォールバック解決
-      // 保存データが空欄の場合、最新マスタの ExpectedClearance を自動補完
+      // ★ 国際線判定と STD/STA の時差表示
+      const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
+      const depTz = isIntl ? formatTzOffset(leg.DepTimeZone || master.DepTimeZone) : "";
+      const arrTz = isIntl ? formatTzOffset(leg.ArrTimeZone || master.ArrTimeZone) : "";
+      document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z${depTz}<br>STA ${leg.STA || '----'}Z${arrTz}`;
+
+      // ATC Clearance
       const currentClearance = (leg.ATC_Clearance !== undefined && leg.ATC_Clearance !== "")
         ? leg.ATC_Clearance
         : (master.ExpectedClearance || leg.ExpectedClearance || "");
       document.getElementById("prepClearance").value = currentClearance;
-      leg.ATC_Clearance = currentClearance; // 内部データにも同期
+      leg.ATC_Clearance = currentClearance;
 
       document.getElementById("squawkDisplay").textContent = leg.Squawk || "----";
       octalBuffer = leg.Squawk || "";
@@ -633,7 +642,7 @@
       document.getElementById("depFix").textContent = leg.DepFixPage || master.DepFixPage || "None";
       document.getElementById("depNotes").textContent = leg.DepNotes || master.DepNotes || "None";
 
-      // Next Leg (IN-FLIGHTタブ): 次レグが存在すれば自動表示、なければ非表示
+      // Next Leg
       const nextLeg = legsData[currentLegIndex + 1];
       const nextLegCard = document.getElementById("nextLegCard");
       if (nextLeg && nextLeg.FlightNo) {
@@ -650,7 +659,7 @@
       document.getElementById("lossCom").textContent = leg.LossCom || master.LossCom || "None";
       document.getElementById("arrNotes").textContent = leg.ArrNotes || master.ArrNotes || "None";
 
-      const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
+      // Enroute ACC
       document.getElementById("accCard").style.display = isIntl ? "block" : "none";
       document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || master.EnrouteACC || "";
 
@@ -710,7 +719,7 @@
       }
     }
 
-    /* --- 電卓風テンキーモーダル制御 --- */
+    /* --- 電卓風テンキーモーダル --- */
     function openTotalPaxKeypad() {
       modalMode = 'TOTAL_PAX';
       document.getElementById("modalKeypadTitle").textContent = "Total PAX 入力";
@@ -839,7 +848,7 @@
       setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    /* --- QRジェネレーター (Leg 1〜4対応 / Next STD撤去) --- */
+    /* --- QRジェネレーター --- */
     function openQrGenerator() {
       document.getElementById("cockpitView").style.display = "none";
       document.getElementById("qrGeneratorView").style.display = "block";
@@ -856,7 +865,6 @@
 
     function generateFlightQR() {
       const rawLegs = [];
-      // 1〜4レグまでループ取得
       for (let i = 1; i <= 4; i++) {
         const f = document.getElementById(`in_f${i}`).value.trim();
         const r = document.getElementById(`in_route${i}`).value.trim().toUpperCase();
