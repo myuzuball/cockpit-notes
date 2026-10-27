@@ -1,10 +1,64 @@
 RouteKey,DepElevation,ArrElevation,AccelHeight,COM1_Pri,COM1_Sec,COM2_Sec,DepCDUSetup,DepFixPage,DepNotes,DescentGate,TerminalFreqs,IsInternational,EnrouteACC,ArrCDUSetup,ArrFixPage,LossCom,ArrNotes,ExpectedClearance
-HND-CTS,21',70',800',121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
+HND-CTS,21',70',"800'
+3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
 15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,SPENS 220,"APP: 120.1
 TWR: 118.8
-GND: 121.6 / 121.7",FALSE,(国内のため空欄),"ILS Y/Z 01R → NAVAR 1Y
+GND: 121.6 / 121.7",false,-,"ILS Y/Z 01R → NAVAR 1Y
 ILS Z 19L → NAVER 1P",,"RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → CHE 7T or Assingned","LVPプリアラーム値：RVR 1,200m - CIG 300ft
 自衛隊側は [RJCJ] → VOR or PAR
 
-Spot 14/18のみ""Broken Lead-in line"" Follow
-","To RJCC via ROVER 3A/4B/4C DEP, BRUCE trans, FPR, FL200"
+Spot 14/18のみ""Broken Lead-in line"" Follow","To RJCC via ROVER 3A/4B/4C DEP, BRUCE trans, FPR, FL200"
+CTS-HND,70',21',800',121.9,121.6,131.85,"01L → TOBBY 9
+01L → SAVIT 3
+19R → JUGGLAR 2 (RNAV)
+19R → DALBI 2 (RNAV)",,DCL無し,TEDIX 160,"APP: 119.1 / 119.4
+TWR: 118.1 / 124.35 / 118.57 / 118.72
+GND: 121.7 / 118.22 / 121.62",false,-,"<西から北風>
+ILS Z 34L → XAC/AKSEL 1A
+ILS X 34L → XAC/ALSEL 1K → <KAIHO>
+ILS Z 34R → XAC/AKSEL2C → <CREAM>
+RNVV 34R → XAC/AKSEL 2H 
+ILS Z 34R → XAC/AKSEL 2H → Discon
+[Night] ILS Y 34R → XAC/AKSEL NIGHT → <KAIHO>
+
+<西から南風>
+LDA W 22(RNVT22 or LDAW22) → XAC/AKSEL1B → <BACON>
+LDA W 23 → XAC/AKSEL 1B → Discon (RV to DEANE)
+ILS 22 → XAC/AKSEL 1N → <NYLON>
+RNP 16R → XAC/AKSEL R → <NATTY>
+RNP 16L → XAC/AKSEL L → <SANDY>
+
+<北から北風>
+ILS Z 34R → GODIN 1C
+ILS Z 34L → GODIN 1C → <CREAM>
+RNVV34R → GODIN 1H
+ILS X 34L → GODIN 2K → <KAIHO>
+
+<北から南風>
+LDA W 23 → GODIN 1D → <DATUM>
+LDA W 22 → GODIN 1D → Discon (RV to BEAST)
+ILS Z 23 → GODIN 1S → <STEAM>
+ILS 22 → GODIN 1S → <STEAM>
+RNP 16R → GODIN R → <NATTY>
+RNP 16L → GODIN L → <SANDY>
+
+<深夜 23:00~06:00>
+ILS Y 34R → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → SAPTI at 4T or assigned → 34Rへ
+他 → SMILE at 4T or assigned → 23へ",TWRにSpot No.通報,"To RJTT via [01L] TOBBY 9 / [19R] JUGGLAR 2, FPR, FL200"
+HND-SIN,21',22',"800'
+3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,-,APP: Test,TRUE,"Test1
+Test2
+Test3","ILS 02L → KARTO 2A → ANUMAとSANAT繋
+ILS 20R → KARTO 2B → IPNAKとBIPOP繋
+ILS 02L → MABAL 2A →ANUMAとSANAT繋
+ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"・ATC 新ICAO方式
+・SINではATCに ""Heavy"" を付ける。
+
+・RWY 02L/20R 着陸 16Z ~ 20Z で Idle REV
+
+・SIN入域 ""JL711, FL(　　　), (Position), SQ (　　)""
+→""M/T FL(　), cleared to SIN via (　　)ARR, Rwy (　　)""","To WSSS via OPPAR 4, JYOGA trans, FPR, FL240"
