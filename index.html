@@ -74,7 +74,7 @@
       text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
     }
 
-    /* 降下ゲート（サイズ最適化・強調枠） */
+    /* 降下ゲート */
     .gate-highlight {
       font-size: 21px; font-weight: 800; color: #FFF;
       background: #3A2E16; border: 1.5px solid var(--accent);
@@ -88,7 +88,7 @@
     .freq-label { font-size: 13px; color: var(--text-sub); }
     .freq-val { font-size: 22px; font-weight: bold; color: #FFF; }
 
-    /* 設定・Fixヒントの視認性強調スタイル */
+    /* 設定・Fixヒント */
     .field-group { margin-bottom: 14px; }
     .field-group:last-child { margin-bottom: 0; }
     .field-label-badge {
@@ -104,10 +104,11 @@
 
     /* テキスト入力（クリアランス用） */
     textarea {
-      width: 100%; background: var(--bg-inner); border: 1px solid var(--border);
+      width: 100%; background: var(--bg-inner); border: 1.5px solid var(--border);
       border-radius: 8px; color: #FFF; font-size: 18px; padding: 12px;
       font-family: monospace; line-height: 1.4; resize: vertical;
     }
+    textarea:focus { border-color: var(--accent); outline: none; }
 
     /* スコーク専用 3×3 キーパッド (0-7, 即時確定) */
     .keypad-container { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -151,7 +152,7 @@
     }
     .del-btn { background: var(--accent-red); color: #FFF; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-    /* 電卓風テンキーポップアップ（Modal Keypad） */
+    /* 電卓風テンキーポップアップ */
     .modal-overlay {
       position: fixed; top: 0; bottom: 0; left: 0; right: 0;
       background: rgba(0,0,0,0.7); z-index: 300; display: none;
@@ -267,7 +268,7 @@
               <div style="font-size:13px; color:var(--text-sub);">CURRENT SQUAWK</div>
               <div class="squawk-val" id="squawkDisplay">----</div>
             </div>
-            <!-- 3×3配置 (0-7 + CLR, 4桁で自動確定) -->
+            <!-- 3×3配置 (0-7 + CLR, 4桁で即時保存) -->
             <div class="keypad-keys-octal">
               <button class="key-btn" onclick="pressOct('1')">1</button>
               <button class="key-btn" onclick="pressOct('2')">2</button>
@@ -403,13 +404,14 @@
   <!-- トースト通知 -->
   <div id="toast"></div>
 
-  <!-- ==================== 3. スマホ用QR生成画面 ==================== -->
+  <!-- ==================== 3. スマホ用QR生成画面 (Leg 1〜4対応 / Next STD撤去) ==================== -->
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <h2 style="margin:0; color:var(--accent);">Flight QR Generator</h2>
       <button class="mode-toggle-btn" onclick="closeQrGenerator()">✕ 閉じる</button>
     </div>
 
+    <!-- Leg 1 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 1</div>
       <div class="leg-input-grid">
@@ -420,6 +422,7 @@
       </div>
     </div>
 
+    <!-- Leg 2 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 2 (任意)</div>
       <div class="leg-input-grid">
@@ -430,6 +433,7 @@
       </div>
     </div>
 
+    <!-- Leg 3 -->
     <div class="leg-input-card">
       <div style="font-weight:bold; color:var(--accent);">Leg 3 (任意)</div>
       <div class="leg-input-grid">
@@ -437,6 +441,17 @@
         <input type="text" id="in_route3" placeholder="区間">
         <input type="text" id="in_std3" placeholder="STD">
         <input type="text" id="in_sta3" placeholder="STA">
+      </div>
+    </div>
+
+    <!-- Leg 4 -->
+    <div class="leg-input-card">
+      <div style="font-weight:bold; color:var(--accent);">Leg 4 (任意)</div>
+      <div class="leg-input-grid">
+        <input type="text" id="in_f4" placeholder="便名">
+        <input type="text" id="in_route4" placeholder="区間">
+        <input type="text" id="in_std4" placeholder="STD">
+        <input type="text" id="in_sta4" placeholder="STA">
       </div>
     </div>
 
@@ -459,7 +474,7 @@
     let octalBuffer = "";
 
     // テンキーモーダル状態
-    let modalMode = null; // 'TOTAL_PAX' or 'SPECIAL_PAX' or 'FREE_PAX'
+    let modalMode = null;
     let modalTargetCode = "";
     let modalBuffer = "";
 
@@ -532,14 +547,14 @@
       }
       if (rows.length < 2) return {};
 
-      const headers = rows[0];
+      const headers = rows[0].map(h => h.trim());
       const master = {};
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
         const obj = {};
         headers.forEach((h, idx) => { obj[h] = row[idx] || ""; });
         if (obj.RouteKey) {
-          master[obj.RouteKey.toUpperCase()] = obj;
+          master[obj.RouteKey.toUpperCase().trim()] = obj;
         }
       }
       return master;
@@ -555,15 +570,17 @@
           const rawLegs = JSON.parse(jsonStr);
 
           legsData = rawLegs.map(r => {
-            const master = ROUTE_MASTER[r.r] || {};
-            const parts = (r.r || "").split("-");
+            const rKey = (r.r || "").toUpperCase().trim();
+            const master = ROUTE_MASTER[rKey] || {};
+            const parts = rKey.split("-");
             return {
               FlightNo: r.f,
+              RouteKey: rKey,
               Dep: parts[0] || "",
               Arr: parts[1] || "",
               STD: r.s,
               STA: r.a,
-              ATC_Clearance: master.ExpectedClearance || "", // マスタから自動挿入
+              ATC_Clearance: master.ExpectedClearance || "", // マスタから初期代入
               ...master
             };
           });
@@ -588,23 +605,33 @@
       }
 
       const leg = legsData[currentLegIndex] || {};
+      const rKey = (leg.RouteKey || `${leg.Dep}-${leg.Arr}`).toUpperCase().trim();
+      const master = ROUTE_MASTER[rKey] || {};
+
       document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
-      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || "0'"}`;
+      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
       document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z<br>STA ${leg.STA || '----'}Z`;
 
-      document.getElementById("prepClearance").value = leg.ATC_Clearance || "";
+      // ★ ATC Clearance の動的フォールバック解決
+      // 保存データが空欄の場合、最新マスタの ExpectedClearance を自動補完
+      const currentClearance = (leg.ATC_Clearance !== undefined && leg.ATC_Clearance !== "")
+        ? leg.ATC_Clearance
+        : (master.ExpectedClearance || leg.ExpectedClearance || "");
+      document.getElementById("prepClearance").value = currentClearance;
+      leg.ATC_Clearance = currentClearance; // 内部データにも同期
+
       document.getElementById("squawkDisplay").textContent = leg.Squawk || "----";
       octalBuffer = leg.Squawk || "";
 
       document.getElementById("totalPaxDisplay").textContent = leg.TotalPAX || "---";
 
-      document.getElementById("com1Pri").textContent = leg.COM1_Pri || "---.--";
-      document.getElementById("com1Sec").textContent = leg.COM1_Sec || "---.--";
-      document.getElementById("com2Sec").textContent = leg.COM2_Sec || "---.--";
-      document.getElementById("accelHeight").textContent = `Accel Height: ${leg.AccelHeight || '----'}`;
-      document.getElementById("depCdu").textContent = leg.DepCDUSetup || "None";
-      document.getElementById("depFix").textContent = leg.DepFixPage || "None";
-      document.getElementById("depNotes").textContent = leg.DepNotes || "None";
+      document.getElementById("com1Pri").textContent = leg.COM1_Pri || master.COM1_Pri || "---.--";
+      document.getElementById("com1Sec").textContent = leg.COM1_Sec || master.COM1_Sec || "---.--";
+      document.getElementById("com2Sec").textContent = leg.COM2_Sec || master.COM2_Sec || "---.--";
+      document.getElementById("accelHeight").textContent = `Accel Height: ${leg.AccelHeight || master.AccelHeight || '----'}`;
+      document.getElementById("depCdu").textContent = leg.DepCDUSetup || master.DepCDUSetup || "None";
+      document.getElementById("depFix").textContent = leg.DepFixPage || master.DepFixPage || "None";
+      document.getElementById("depNotes").textContent = leg.DepNotes || master.DepNotes || "None";
 
       // Next Leg (IN-FLIGHTタブ): 次レグが存在すれば自動表示、なければ非表示
       const nextLeg = legsData[currentLegIndex + 1];
@@ -616,16 +643,16 @@
         nextLegCard.style.display = "none";
       }
 
-      document.getElementById("arrGate").textContent = leg.DescentGate || "None";
-      document.getElementById("termFreqs").textContent = leg.TerminalFreqs || "None";
-      document.getElementById("arrCdu").textContent = leg.ArrCDUSetup || "None";
-      document.getElementById("arrFix").textContent = leg.ArrFixPage || "None";
-      document.getElementById("lossCom").textContent = leg.LossCom || "None";
-      document.getElementById("arrNotes").textContent = leg.ArrNotes || "None";
+      document.getElementById("arrGate").textContent = leg.DescentGate || master.DescentGate || "None";
+      document.getElementById("termFreqs").textContent = leg.TerminalFreqs || master.TerminalFreqs || "None";
+      document.getElementById("arrCdu").textContent = leg.ArrCDUSetup || master.ArrCDUSetup || "None";
+      document.getElementById("arrFix").textContent = leg.ArrFixPage || master.ArrFixPage || "None";
+      document.getElementById("lossCom").textContent = leg.LossCom || master.LossCom || "None";
+      document.getElementById("arrNotes").textContent = leg.ArrNotes || master.ArrNotes || "None";
 
-      const isIntl = String(leg.IsInternational).toUpperCase() === "TRUE";
+      const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
       document.getElementById("accCard").style.display = isIntl ? "block" : "none";
-      document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || "";
+      document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || master.EnrouteACC || "";
 
       renderPaxList();
       renderDrawerLegs();
@@ -663,7 +690,7 @@
 
     /* --- スコークキーパッド (0-7, 4桁で即時保存) --- */
     function pressOct(num) {
-      if (octalBuffer.length >= 4) octalBuffer = ""; // 既に4桁なら上書き開始
+      if (octalBuffer.length >= 4) octalBuffer = "";
       octalBuffer += num;
       document.getElementById("squawkDisplay").textContent = octalBuffer.padEnd(4, "-");
       
@@ -812,7 +839,7 @@
       setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    /* --- QRジェネレーター (Next STD手動入力を廃止・簡略化) --- */
+    /* --- QRジェネレーター (Leg 1〜4対応 / Next STD撤去) --- */
     function openQrGenerator() {
       document.getElementById("cockpitView").style.display = "none";
       document.getElementById("qrGeneratorView").style.display = "block";
@@ -829,7 +856,8 @@
 
     function generateFlightQR() {
       const rawLegs = [];
-      for (let i = 1; i <= 3; i++) {
+      // 1〜4レグまでループ取得
+      for (let i = 1; i <= 4; i++) {
         const f = document.getElementById(`in_f${i}`).value.trim();
         const r = document.getElementById(`in_route${i}`).value.trim().toUpperCase();
         const s = document.getElementById(`in_std${i}`).value.trim();
