@@ -1,10 +1,10 @@
-RouteKey,DepElevation,ArrElevation,AccelHeight,COM1_Pri,COM1_Sec,COM2_Sec,DepCDUSetup,DepFixPage,DepNotes,DescentGate,TerminalFreqs,IsInternational,EnrouteACC,ArrCDUSetup,ArrFixPage,LossCom,ArrNotes,ExpectedClearance
-CTS-HND,9,9,70',800',121.9,121.6,131.85,"01L → TOBBY 9
+RouteKey,DepElevation,ArrElevation,AccelHeight,COM1_Pri,COM1_Sec,COM2_Sec,DepCDUSetup,DepFixPage,DepNotes,DescentGate,TerminalFreqs,IsInternational,EnrouteACC,ArrCDUSetup,ArrFixPage,LossCom,ArrNotes,ExpectedClearance,DepTimeZone,ArrTimeZone
+CTS-HND,70',21',800',121.9,121.6,131.85,"01L → TOBBY 9
 01L → SAVIT 3
 19R → JUGGLAR 2 (RNAV)
-19R → DALBI 2 (RNAV)",,TEDIX 160,RTE5 : A-R-S,false,-,"APP: 119.1 / 119.4
+19R → DALBI 2 (RNAV)",,DCL無し,TEDIX 160,"APP: 119.1 / 119.4
 TWR: 118.1 / 124.35 / 118.57 / 118.72
-GND: 121.7 / 118.22 / 121.62","<西から北風>
+GND: 121.7 / 118.22 / 121.62",false,-,"<西から北風>
 ILS Z 34L → XAC/AKSEL 1A
 ILS X 34L → XAC/ALSEL 1K → <KAIHO>
 ILS Z 34R → XAC/AKSEL2C → <CREAM>
@@ -38,59 +38,72 @@ ILS Y 34R → XAC/AKSEL/MESSE NIGHT → <KAIHO>
 LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
 VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → SAPTI at 4T or assigned → 34Rへ
-他 → SMILE at 4T or assigned → 23へ","To RJTT via [01L] TOBBY 9 / [19R] JUGGLAR 2, FPR, FL200"
-CTS-ITM,9,9,70',800',121.9,121.6,131.85,"01L → TOBBY 9
+他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
+STAR開始点の高度FL155以上ならベタ打ち","To RJTT via [01L] TOBBY 9 / [19R] JUGGLAR 2, FPR, FL200",9,9
+CTS-ITM,70',39',800',121.9,121.6,131.85,"01L → TOBBY 9
 01L → SAVIT 3
 19R → JUGGLAR 2 (RNAV)
-19R → DALBI 2 (RNAV)",,"KMC 340 / ROKKO 11,000'","DCL 5分前
-ATIS 1時間ごと
-
-32Lからの出発
-→ITE 1.2 DMEでLeft Turn
-
-14Rからの出発
-→ITE 3.7DMEでLeft Turn",false,-,"APP: 120.45
+19R → DALBI 2 (RNAV)",,DCL無し,"KMC 340 / ROKKO 11,000'","APP: 120.45
 TWR: 118.1
-GND: 121.7","ILS 32L → AGPUK 1R
+GND: 121.7",false,-,"ILS 32L → AGPUK 1R
 14R → VFR APPR(右) → VSL14R(左) → FA消
 ILS 32L → ROKKO 1","KONGO (3,700')
-HIBRI (776')",APP 1分 → 7600/TWR/VFR → IZUMI 5T or Assingned → IZUMI ARR,"To RJOO via [01L] SAVIT, SHUYU trans / [19R] DALBI 2, FPR, FL200"
-HND-CTS,9,9,21',"800'
+HIBRI (776')",APP 1分 → 7600/TWR/VFR → IZUMI 5T or Assingned → IZUMI ARR,運用07:00 ~ 21:00 / ATIS 1時間ごと,"To RJOO via [01L] SAVIT, SHUYU trans / [19R] DALBI 2, FPR, FL200",9,9
+HND-CTS,21',70',"800'
 3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
-15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",IDEMI 150 (Rwy01) / NAVER 170 (Rwy19),DCL無し,false,-,"APP: 120.1
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,IDEMI 150 (Rwy01) / NAVER 170 (Rwy19),"APP: 120.1
 TWR: 118.8
-GND: 121.6 / 121.7","ILS Y/Z 01R → NAVAR 1Y
-ILS Z 19L → NAVER 1P",,"RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → CHE 7T or Assingned","To RJCC via ROVER 3A/4B/4C DEP, BRUCE trans, FPR, FL200"
-HND-SIN,9,8,21',"800'
+GND: 121.6 / 121.7",false,-,"ILS Y/Z 01R → NAVAR 1Y
+ILS Z 19L → NAVER 1P",,"RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → CHE 7T or Assingned","LVPプリアラーム値：RVR 1,200m - CIG 300ft
+自衛隊側は [RJCJ] → VOR or PAR
+
+Spot 14/18のみ""Broken Lead-in line"" Follow
+
+STAR開始点の高度FL155以上ならベタ打ち","To RJCC via ROVER 3A/4B/4C DEP, BRUCE trans, FPR, FL200",9,9
+HND-SIN,21',22',"800'
 3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
-15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",-,"DCL5分前 / NADP2○　→　Standard P/B approve はFace N (N of Term1)
-Maintain 3,000ft指示
-Voice 5分前 / JL***, to HND/NRT, FL(　　　　), Bay (　　　　　)
-
-
-4,000ft以下 230kt
-10,000ft以下 250kt",TRUE,"SIN RDR 134.4 / 134.9
-→ SQの確認 
-→ ""Clear to SIN via KARTO2A/2B  Rwy XX, FL*** (HDG ***)""
-→ ""Clear to SIN via MABAL2A/2B Rwy XX, FL*** (HDG***)""","APP: 124.3 / 124.05
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,-,"APP: 124.3 / 124.05
 ARR: 119.3
 TWR: 118.6 (118.25 for Rwy 02C)
-GND: 124.3","ILS 02L → KARTO 2A → ANUMAとSANAT繋
+GND: 124.3",TRUE,"SIN RDR 134.4 / 134.9
+→ SQの確認 
+→ ""Clear to SIN via KARTO2A/2B  Rwy XX, FL*** (HDG ***)""
+→ ""Clear to SIN via MABAL2A/2B Rwy XX, FL*** (HDG***)""","ILS 02L → KARTO 2A → ANUMAとSANAT繋
 ILS 20R → KARTO 2B → IPNAKとBIPOP繋
 ILS 02L → MABAL 2A →ANUMAとSANAT繋
-ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"To WSSS via OPPAR 4, JYOGA trans, FPR, FL240"
-ITM-CTS,9,9,39',"3,000'",118.8,121.7,131.85 (ITAMI),"32L → ASUKA 4 (TAS32L) → <SHTLE>
+ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"・SIN入域 ""JL711, FL(　　　), (Position), SQ (　　)""
+→""M/T FL(　), cleared to SIN via (　　)ARR, Rwy (　　)""
+
+・ATC 新ICAO方式
+・SINではATCに ""Heavy"" を付ける。
+
+・RWY 02L/20R 着陸 16Z ~ 20Z で Idle REV
+・10T【以下】250kt制限
+・180kt 8nm / 150kt 4nm","To WSSS via OPPAR 4, JYOGA trans, FPR, FL240",9,8
+ITM-CTS,39',70',"3,000'",118.8,121.7,131.85 (ITAMI),"32L → ASUKA 4 (TAS32L) → <SHTLE>
 14R → ASUKA 4 → <SHTLE>
 
 【CTS方面】
 32L → MINAC 4 (TMI32L) → <GUJYO>
 14R → MINAC 4 → <GUJYO>","ISKD 270, /3, /4 (正確には2.8nmと3.6nm)
 IZUMI 360
-KONGO",IDEMI 150 (Rwy01) / NAVER 170 (Rwy19),DCL無し,false,-,"APP: 120.1
+KONGO","DCL 5分前
+ATIS 1時間ごと
+
+32Lからの出発
+→ITE 1.2 DMEでLeft Turn
+
+14Rからの出発
+→ITE 3.7DMEでLeft Turn",IDEMI 150 (Rwy01) / NAVER 170 (Rwy19),"APP: 120.1
 TWR: 118.8
-GND: 121.6 / 121.7","ILS Y/Z 01R → NAVAR 1Y
-ILS Z 19L → NAVER 1P",,"RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → CHE 7T or Assingned","To RJCC via MINAC 4, GUJYO trans, FPR, FL160"
-NRT-SIN,9,8,135',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
+GND: 121.6 / 121.7",false,-,"ILS Y/Z 01R → NAVAR 1Y
+ILS Z 19L → NAVER 1P",,"RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → CHE 7T or Assingned","LVPプリアラーム値：RVR 1,200m - CIG 300ft
+自衛隊側は [RJCJ] → VOR or PAR
+
+Spot 14/18のみ""Broken Lead-in line"" Follow
+
+STAR開始点の高度FL155以上ならベタ打ち","To RJCC via MINAC 4, GUJYO trans, FPR, FL160",9,9
+NRT-SIN,135',22',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
 16R → OLVAN2 → <SAMUS> or NO Trans
 34L → BORLO2
 16R → BORLO2
@@ -99,56 +112,79 @@ NRT-SIN,9,8,135',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L �
 34L → PIGOK2
 16R → PIGOK2
 34L → REDEK2
-16R → REDEK2",RJAA /416,-,"DCL5分前 / NADP2○　→　Standard P/B approve はFace N (N of Term1)
-Maintain 3,000ft指示
-Voice 5分前 / JL***, to HND/NRT, FL(　　　　), Bay (　　　　　)
-
-
-4,000ft以下 230kt
-10,000ft以下 250kt",TRUE,"SIN RDR 134.4 / 134.9
-→ SQの確認 
-→ ""Clear to SIN via KARTO2A/2B  Rwy XX, FL*** (HDG ***)""
-→ ""Clear to SIN via MABAL2A/2B Rwy XX, FL*** (HDG***)""","APP: 124.3 / 124.05
-ARR: 119.3
-TWR: 118.6 (118.25 for Rwy 02C)
-GND: 124.3","ILS 02L → KARTO 2A → ANUMAとSANAT繋
-ILS 20R → KARTO 2B → IPNAKとBIPOP繋
-ILS 02L → MABAL 2A →ANUMAとSANAT繋
-ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"To WSSS via  OLVAN 2, FPR, FL230"
-NRT-GUM,9,10,135',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
-16R → OLVAN2 → <SAMUS> or NO Trans
-34L → BORLO2
-16R → BORLO2
-34L → TETRA8 → <ENPAR>
-16R → TETRA8 → <ENPAR>
-34L → PIGOK2
-16R → PIGOK2
-34L → REDEK2
-16R → REDEK2",RJAA /416,-,"・Boading開始は30分前をRQされる。
-・GNDよりClearance取得
-　→RampにRQ P/B → RampにRQ Taxi でCTC GND指示
-
-・Fly RWY HDG → HDGを維持する。(Trackズレ○)",TRUE,"""Contact Guam Center 118.7 at 250nm out of Guam, SQ2100"" 
-→CPDLC利用時もSQ 2100をセットする。","Guam APP: 119.8
-Agana TWR: 118.1
-Agana GND: 121.9
-Agana Ramp: 121.6","ILS 6L → UNZ/-20 - OBALE繋
-RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
-TFRC2 /1",,"To PGUM via OLVAN2, FPR, FL230"
-GUM-NRT,10,9,305',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋","UNZ R-330
-TFRC2 /1",MAMAS 240,"Taxi Coded RTE確認
+16R → REDEK2",RJAA /416,"Taxi Coded RTE確認
 
 34LGT
 34LA9GT
 
-SPID実施時Initial WPTの確認",TRUE,,"APP: 124.4 / 127.7
+SPID実施時Initial WPTの確認",-,"APP: 124.3 / 124.05
+ARR: 119.3
+TWR: 118.6 (118.25 for Rwy 02C)
+GND: 124.3",TRUE,"SIN RDR 134.4 / 134.9
+→ SQの確認 
+→ ""Clear to SIN via KARTO2A/2B  Rwy XX, FL*** (HDG ***)""
+→ ""Clear to SIN via MABAL2A/2B Rwy XX, FL*** (HDG***)""","ILS 02L → KARTO 2A → ANUMAとSANAT繋
+ILS 20R → KARTO 2B → IPNAKとBIPOP繋
+ILS 02L → MABAL 2A →ANUMAとSANAT繋
+ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"・SIN入域 ""JL711, FL(　　　), (Position), SQ (　　)""
+→""M/T FL(　), cleared to SIN via (　　)ARR, Rwy (　　)""
+
+・ATC 新ICAO方式
+・SINではATCに ""Heavy"" を付ける。
+
+・RWY 02L/20R 着陸 16Z ~ 20Z で Idle REV
+・10T【以下】250kt制限
+・180kt 8nm / 150kt 4nm","To WSSS via  OLVAN 2, FPR, FL230",9,8
+NRT-GUM,135',305',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
+16R → OLVAN2 → <SAMUS> or NO Trans
+34L → BORLO2
+16R → BORLO2
+34L → TETRA8 → <ENPAR>
+16R → TETRA8 → <ENPAR>
+34L → PIGOK2
+16R → PIGOK2
+34L → REDEK2
+16R → REDEK2",RJAA /416,"Taxi Coded RTE確認
+
+34LGT
+34LA9GT
+
+SPID実施時Initial WPTの確認",-,"Guam APP: 119.8
+Agana TWR: 118.1
+Agana GND: 121.9
+Agana Ramp: 121.6",TRUE,"""Contact Guam Center 118.7 at 250nm out of Guam, SQ2100"" 
+→CPDLC利用時もSQ 2100をセットする。","ILS 6L → UNZ/-20 - OBALE繋
+RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
+TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
+・RTE2候補 → RWY 06R/24L
+・着陸後はGND飛ばしてRamp
+
+・smからmへの単位換算  [OMS 6.2.1.1 単位の換算について]
+・RWY 06は受け 24は下り
+　06L/24R：±0.59%
+　06R/24L：±0.70%
+
+・ATISはVoice
+・ILS 6LのPROC Turn注意","To PGUM via OLVAN2, FPR, FL230",9,10
+GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋","UNZ R-330
+TFRC2 /1","・Boading開始は30分前をRQされる。
+・GNDよりClearance取得
+　→RampにRQ P/B → RampにRQ Taxi でCTC GND指示
+
+・Fly RWY HDG → HDGを維持する。(Trackズレ○)",MAMAS 240,"APP: 124.4 / 127.7
 TWR: 118.35 / 118.2 (A Rwy)
 GND: 121.95 / 121.85
-Ramp: 121.6 / 121.75","ILS Y/Z 34R → RUTAS T → TYLER
+Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
 ILS Y/Z 16L → RUTAS G → GEMIN
 ILS Y/Z 34R → LUBRA T → TYLER
 ILS Y/Z 16L → LUBRA G → GEMIN
 ILS Y/Z 34R → SWAMP T → TYLER
 ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → GIINA at 4T or assigned → 34Lへ
-16 in use → LAKES at 6T or assigned → 16Rへ","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8, SQ　　　"
+16 in use → LAKES at 6T or assigned → 16Rへ","RUTAS G ARR → ILS Y 16Lの場合、RVでのShort CutによってCDU上のETAから最大8分くらいは早着できる。
+
+170kt until 7 DMEなどの指示があり得る。
+G/Dについて
+・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
+・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
+","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8, SQ　　　",10,9
