@@ -114,46 +114,6 @@ Rwy 18：Gear / Final Flap 3,00ft ~
 
 2300L~
 ILS X 18 → OLTOM MARINE → <MINEL>","To RJGG via PIGOK2, FPR, FL240",9,9
-NGO-PVG,12',12',800',121.85,121.8,131.85 (NAGOYA),"18 → IKAROS 4 → HIKNE
-36 → IKAROS 4 → HIKNE",,DCLアリ,-,"Shanghai
-APP: 125.62 / 125.4 / 123.8
-
-Pudong
-TWR: 118.4 / 118.57
-GND: 121.7 (W) / 121.8 (E)
-Apron: 121.65",TRUE,,"ILS Z 34R → DUMET2 → <MAP2>
-ILS Z 16L → DUMET1 → <MP1>
-ILS Z 35L → DUMET2 → <MAP2>
-ILS Z 17R → DUMET1 → <MP1>",[PD235]  R-276,,"・LIDはSTARとAPPを通報
-・Transition : FL118
-
-・Corridor：FL240 / 280 / 300 / 400","To ZSPD via IKAROS4, FPR, 7,000'",9,8
-PVG-NRT,12',135',"3,000'",121.95,121.65 (Cargo) / 122.6 (PAX),129.8 (Shanghai),"34L → LAMEN 1
-16R → LAMEN 1",,"SHA ACC: 125.625 → 120.95
-
-NADP2 × / Maintain 900m (3,000ft)
-DCL 20分前 / Voice 10分前
-→PaxならApron 122.6でシークエンス → 121.65でP/B許可
-
-2500AGL 4NM 圏内は200kt or Min Safe Air SPD
-
-Corridor：FL250 / 290 / 310 / 390",MAMAS FL240,"APP: 124.4 / 127.7
-TWR: 118.35 / 118.2 (A Rwy)
-GND: 121.95 / 121.85
-Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
-ILS Y/Z 16L → RUTAS G → GEMIN
-ILS Y/Z 34R → LUBRA T → TYLER
-ILS Y/Z 16L → LUBRA G → GEMIN
-ILS Y/Z 34R → SWAMP T → TYLER
-ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
-34 in use → GIINA at 4T or assigned → 34Lへ
-16 in use → LAKES at 6T or assigned → 16Rへ","RUTAS G ARR → ILS Y 16Lの場合、RVでのShort CutによってCDU上のETAから最大8分くらいは早着できる。
-
-170kt until 7 DMEなどの指示があり得る。
-G/Dについて
-・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
-・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
-","To RJAA via LAMEN1, mt 900m",8,9
 HND-SIN,21',22',"800'
 3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
 15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,-,"APP: 124.3 / 124.05
@@ -214,10 +174,10 @@ Voice 5分前 / JL***, to HND/NRT, FL(　　　　), Bay (　　　　　)
 
 
 4,000ft以下 230kt
-10,000ft以下 250kt",,"APP: 124.4 / 127.7
+10,000ft以下 250kt",MAMAS FL240,"APP: 124.4 / 127.7
 TWR: 118.35 / 118.2 (A Rwy)
 GND: 121.95 / 121.85
-Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
+Ramp: 121.6 / 121.75",TRUE,-,"ILS Y/Z 34R → RUTAS T → TYLER
 ILS Y/Z 16L → RUTAS G → GEMIN
 ILS Y/Z 34R → LUBRA T → TYLER
 ILS Y/Z 16L → LUBRA G → GEMIN
@@ -230,24 +190,8 @@ ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
 G/Dについて
 ・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
-",,8,9
-HND-SIN,21',22',"800'
-3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
-15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,,"APP: 124.3 / 124.05
-ARR: 119.3
-TWR: 118.6 (118.25 for Rwy 02C)
-GND: 124.3",TRUE,,"ILS 02L → KARTO 2A → ANUMAとSANAT繋
-ILS 20R → KARTO 2B → IPNAKとBIPOP繋
-ILS 02L → MABAL 2A →ANUMAとSANAT繋
-ILS 20R → MABAL 2B → IPNAKとNYLON繋",,STAR飛行後SAMKOのHolding Area (SHA) へ,"・SIN入域 ""JL711, FL(　　　), (Position), SQ (　　)""
-→""M/T FL(　), cleared to SIN via (　　)ARR, Rwy (　　)""
-
-・ATC 新ICAO方式
-・SINではATCに ""Heavy"" を付ける。
-
-・RWY 02L/20R 着陸 16Z ~ 20Z で Idle REV
-・10T【以下】250kt制限
-・180kt 8nm / 150kt 4nm",,9,8
+","To RJAA via TOMAN 3A/5B, Rwy　　,FL　　
+AKMON",8,9
 SIN-HND,22',21',800',121.65,121.85 (N of Term1) / 124.3 (W of Term3),131.8,"20C → TOMAN 5B
 02C → TOMAN 3A
 20C → MERSING 9B(VMR 9B)",,"DCL5分前 / NADP2○　→　Standard P/B approve はFace N (N of Term1)
@@ -256,9 +200,9 @@ Voice 5分前 / JL***, to HND/NRT, FL(　　　　), Bay (　　　　　)
 
 
 4,000ft以下 230kt
-10,000ft以下 250kt",,"APP: 119.1 / 119.4
+10,000ft以下 250kt",MAMAS FL240,"APP: 119.1 / 119.4
 TWR: 118.1 / 124.35 / 118.57 / 118.72
-GND: 121.7 / 118.22 / 121.62",TRUE,,"<西から北風>
+GND: 121.7 / 118.22 / 121.62",TRUE,-,"<西から北風>
 ILS Z 34L → XAC/AKSEL 1A
 ILS X 34L → XAC/ALSEL 1K → <KAIHO>
 ILS Z 34R → XAC/AKSEL2C → <CREAM>
@@ -293,7 +237,8 @@ LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
 VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → SAPTI at 4T or assigned → 34Rへ
 他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
-STAR開始点の高度FL155以上ならベタ打ち",,8,9
+STAR開始点の高度FL155以上ならベタ打ち","To RJTT via TOMAN 3A/5B, Rwy　　,FL　　
+AKMON",8,9
 NRT-GUM,135',305',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
 16R → OLVAN2 → <SAMUS> or NO Trans
 34L → BORLO2
@@ -347,3 +292,43 @@ G/Dについて
 ・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
 ","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8, SQ　　　",10,9
+NGO-PVG,12',12',800',121.85,121.8,131.85 (NAGOYA),"18 → IKAROS 4 → HIKNE
+36 → IKAROS 4 → HIKNE",,DCLアリ,-,"Shanghai
+APP: 125.62 / 125.4 / 123.8
+
+Pudong
+TWR: 118.4 / 118.57
+GND: 121.7 (W) / 121.8 (E)
+Apron: 121.65",TRUE,,"ILS Z 34R → DUMET2 → <MAP2>
+ILS Z 16L → DUMET1 → <MP1>
+ILS Z 35L → DUMET2 → <MAP2>
+ILS Z 17R → DUMET1 → <MP1>",[PD235]  R-276,,"・LIDはSTARとAPPを通報
+・Transition : FL118
+
+・Corridor：FL240 / 280 / 300 / 400","To ZSPD via IKAROS4, FPR, 7,000'",9,8
+PVG-NRT,12',135',"3,000'",121.95,121.65 (Cargo) / 122.6 (PAX),129.8 (Shanghai),"34L → LAMEN 1
+16R → LAMEN 1",,"SHA ACC: 125.625 → 120.95
+
+NADP2 × / Maintain 900m (3,000ft)
+DCL 20分前 / Voice 10分前
+→PaxならApron 122.6でシークエンス → 121.65でP/B許可
+
+2500AGL 4NM 圏内は200kt or Min Safe Air SPD
+
+Corridor：FL250 / 290 / 310 / 390",MAMAS FL240,"APP: 124.4 / 127.7
+TWR: 118.35 / 118.2 (A Rwy)
+GND: 121.95 / 121.85
+Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
+ILS Y/Z 16L → RUTAS G → GEMIN
+ILS Y/Z 34R → LUBRA T → TYLER
+ILS Y/Z 16L → LUBRA G → GEMIN
+ILS Y/Z 34R → SWAMP T → TYLER
+ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → GIINA at 4T or assigned → 34Lへ
+16 in use → LAKES at 6T or assigned → 16Rへ","RUTAS G ARR → ILS Y 16Lの場合、RVでのShort CutによってCDU上のETAから最大8分くらいは早着できる。
+
+170kt until 7 DMEなどの指示があり得る。
+G/Dについて
+・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
+・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
+","To RJAA via LAMEN1, mt 900m",8,9
