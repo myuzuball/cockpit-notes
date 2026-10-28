@@ -447,6 +447,82 @@ VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → SAPTI at 4T or assigned → 34Rへ
 他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
 STAR開始点の高度FL155以上ならベタ打ち","To RJTT via BOLIG 2, MIDER trans, FPR, 8,000'",9,9
+HND-FUK,21',30',"800'
+3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,SUNPI FL340 / STOUT FL180,"APP: 119.65 / 121.125 / 127.9
+TWR: 118.4 / 118.25
+GND: 121.7 / 121.8",false,-,"34R → VFR APPR → VSL 34R → KIRIN → FA消
+RNP 34R → KIRIN D/K → 無Trans
+RNP 16L → KIRIN E → <ENTIX>","RJFF /5
+SEBRI 3,543ft / 脊振山 10nm南西
+SHIKA 554ft / 志賀島 10nm北西
+NHK 570ft / NHKアンテナ","FUK APP 30秒 → 7600/TWR/VFR
+16L/R in use → AKTIB at 2T or assigned → 16L
+34L/R in use → ADPAR at 4T or assigned → 34R　/　無理ならDGC 5T","TWRにRWY Number通報のこと！
+
+福岡空港運用時間 : 0700 ~ 2200 JST
+・19時 ~ Idle REV        
+・Tail 10ktまではRwy 16を使用
+・16 → RNP or LOCが優先利用 (PWS Nuisance注意)
+・34 → VISが優先利用、次にRNP, LOC
+→Legsの最後にDGC追加
+
+<Visual Approach>
+Fix : NHK (570'), RJFF /5
+→Legsの最後にDGC追加
+
+<When GA in Visual Approach>
+DWまでなら → 5T, DGC-160, YAMEK, IKE
+DW以降なら → 4T, DGC, IKE
+
+<Extend DW>
+・RJFF /5と通常パターンの中間が期待される。
+→VREF + 20ktでMax33秒
+・Baseの先には三郡山 (3,100ft) あり。Final Overshoot注意。","To RJFF via TIARA 2A/3B/3C or GUSRO 1, FPR, FL200",9,9
+FUK-HND,30',21',"3,000'",121.92,121.7,131.9 (FUKUOKA),"16 → YOKAT 6 → <IPRIR>
+34 → YOKAT 6 → <IPRIR>","DGC 158/20
+OGORI 060","RWY16：EO SIDを2人で確認のこと
+基本的にHDG SでP/Bする / EDCT Assignでもいつでも ""Ready for P/B""すること。
+
+P/Bは基本Fase S
+Power Off P/B → Keep Towing Car attached until engine start",SPENS FL220,"APP: 119.1 / 119.4
+TWR: 118.1 / 124.35 / 118.57 / 118.72
+GND: 121.7 / 118.22 / 121.62",false,-,"<西から北風>
+ILS Z 34L → XAC/AKSEL 1A
+ILS X 34L → XAC/ALSEL 1K → <KAIHO>
+ILS Z 34R → XAC/AKSEL2C → <CREAM>
+RNVV 34R → XAC/AKSEL 2H 
+ILS Z 34R → XAC/AKSEL 2H → Discon
+[Night] ILS Y 34R → XAC/AKSEL NIGHT → <KAIHO>
+
+<西から南風>
+LDA W 22(RNVT22 or LDAW22) → XAC/AKSEL1B → <BACON>
+LDA W 23 → XAC/AKSEL 1B → Discon (RV to DEANE)
+ILS 22 → XAC/AKSEL 1N → <NYLON>
+RNP 16R → XAC/AKSEL R → <NATTY>
+RNP 16L → XAC/AKSEL L → <SANDY>
+
+<北から北風>
+ILS Z 34R → GODIN 1C
+ILS Z 34L → GODIN 1C → <CREAM>
+RNVV34R → GODIN 1H
+ILS X 34L → GODIN 2K → <KAIHO>
+
+<北から南風>
+LDA W 23 → GODIN 1D → <DATUM>
+LDA W 22 → GODIN 1D → Discon (RV to BEAST)
+ILS Z 23 → GODIN 1S → <STEAM>
+ILS 22 → GODIN 1S → <STEAM>
+RNP 16R → GODIN R → <NATTY>
+RNP 16L → GODIN L → <SANDY>
+
+<深夜 23:00~06:00>
+ILS Y 34R → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → SAPTI at 4T or assigned → 34Rへ
+他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
+STAR開始点の高度FL155以上ならベタ打ち","To RJTT via YOKAT 6, IPRIR trans, FPR, FL170",9,9
 NRT-GUM,135',305',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
 16R → OLVAN2 → <SAMUS> or NO Trans
 34L → BORLO2
