@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cockpit Assistant</title>
+  <!-- 外部CDNを使わず、同一リポジトリ内のローカルスクリプトを参照 -->
   <script src="./qrcode.min.js"></script>
   <style>
     :root {
@@ -31,24 +32,55 @@
       user-select: none;
     }
 
-    /* 固定ヘッダー */
+    /* 固定ヘッダー（iPad Slide Over/狭小幅対応） */
     header {
       position: fixed; top: 0; left: 0; right: 0; height: 75px;
       background-color: var(--bg-surface);
       border-bottom: 2px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px; z-index: 100;
+      padding: 0 12px; z-index: 100;
+      gap: 8px;
     }
-    .header-left { display: flex; align-items: center; gap: 14px; }
-    .menu-btn { background: none; border: none; color: var(--accent); font-size: 30px; cursor: pointer; padding: 4px; }
-    .flight-title { font-size: 26px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
-    .route-info { font-size: 19px; font-weight: 600; color: var(--accent); }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .header-times { font-size: 17px; font-family: monospace; font-weight: bold; text-align: right; line-height: 1.25; }
-    .mode-toggle-btn {
-      background: var(--bg-highlight); border: 1px solid var(--accent);
-      color: var(--accent); padding: 8px 12px; border-radius: 6px;
-      font-size: 14px; font-weight: bold; cursor: pointer;
+    .header-left {
+      display: flex; align-items: center; gap: 10px;
+      min-width: 0; flex: 1;
+    }
+    .menu-btn {
+      background: none; border: none; color: var(--accent);
+      font-size: 28px; cursor: pointer; padding: 4px;
+      flex-shrink: 0;
+    }
+    .header-title-box {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .flight-title {
+      font-size: 23px; font-weight: 800; color: #FFF; letter-spacing: 0.5px;
+      line-height: 1.15; white-space: nowrap;
+    }
+    .route-info {
+      font-size: 15px; font-weight: 600; color: var(--accent);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.2; margin-top: 2px;
+    }
+    .header-right {
+      display: flex; align-items: center; flex-shrink: 0;
+    }
+    .header-times {
+      font-size: 14px; font-family: monospace; font-weight: bold;
+      text-align: right; line-height: 1.25; white-space: nowrap;
+      color: #FFF;
+    }
+
+    /* iPad通常幅・PC時のヘッダー拡張 */
+    @media (min-width: 600px) {
+      header { padding: 0 16px; gap: 14px; }
+      .header-left { gap: 14px; }
+      .flight-title { font-size: 27px; }
+      .route-info { font-size: 18px; }
+      .header-times { font-size: 16px; }
     }
 
     /* タブ切り替えバー */
@@ -59,7 +91,7 @@
     .tab-btn {
       flex: 1; background: var(--bg-surface); border: none;
       border-bottom: 4px solid transparent; color: var(--text-sub);
-      font-size: 20px; font-weight: bold; cursor: pointer;
+      font-size: 18px; font-weight: bold; cursor: pointer;
     }
     .tab-btn.active { background: var(--bg-base); color: #FFF; border-bottom-color: var(--accent-blue); }
 
@@ -70,7 +102,7 @@
       padding: 16px; margin-bottom: 16px; border: 1px solid var(--border);
     }
     .section-title {
-      font-size: 15px; font-weight: bold; color: var(--text-sub);
+      font-size: 14px; font-weight: bold; color: var(--text-sub);
       text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
     }
 
@@ -202,7 +234,7 @@
     .drawer-overlay.open { display: block; }
     .leg-select-btn {
       background: var(--bg-surface); border: 1px solid var(--border); color: #FFF;
-      padding: 14px; border-radius: 8px; text-align: left; font-size: 18px; font-weight: bold; cursor: pointer;
+      padding: 14px; border-radius: 8px; text-align: left; font-size: 17px; font-weight: bold; cursor: pointer;
     }
     .leg-select-btn.active { border-color: var(--accent); background: #332B1A; }
 
@@ -241,14 +273,14 @@
     <header>
       <div class="header-left">
         <button class="menu-btn" onclick="toggleDrawer()">≡</button>
-        <div>
+        <div class="header-title-box">
           <div class="flight-title" id="headFlightNo">JL ---</div>
-          <div class="route-info" id="headRoute">DEP ---' ──▶ ARR ---'</div>
+          <div class="route-info" id="headRoute">DEP ---' → ARR ---'</div>
         </div>
       </div>
       <div class="header-right">
+        <!-- STD / STA (国際線時は時差を自動付与) -->
         <div class="header-times" id="headTimes">STD ----Z<br>STA ----Z</div>
-        <button class="mode-toggle-btn" onclick="openQrGenerator()">📱入力/QR</button>
       </div>
     </header>
 
@@ -257,13 +289,22 @@
       <button class="tab-btn" id="tabInflightBtn" onclick="switchTab('INFLIGHT')">🛬 IN-FLIGHT / ARR</button>
     </div>
 
-    <!-- レグ選択ドロワー -->
+    <!-- レグ選択ドロワー (メニュー内に「📱 便データ入力 / QR生成」を統合) -->
     <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
-      <h2 style="margin-top:0; color:var(--accent);">Select Leg</h2>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <h2 style="margin:0; color:var(--accent); font-size:20px;">Flight Menu</h2>
+        <button style="background:none; border:none; color:var(--text-sub); font-size:24px; cursor:pointer;" onclick="toggleDrawer()">✕</button>
+      </div>
+
+      <!-- 入力/QR生成ボタンをドロワー最上部に配置 -->
+      <button class="leg-select-btn" style="background:#2C2416; border:1.5px solid var(--accent); color:var(--accent); font-size:16px; font-weight:bold; margin-bottom:10px; text-align:center; padding:12px;" onclick="openQrGeneratorFromDrawer()">
+        📱 便データ入力 / QR生成
+      </button>
+
+      <div class="section-title" style="margin-bottom:8px;">SELECT LEG</div>
       <div id="legButtons"></div>
       <div style="margin-top:auto;">
-        <button class="leg-select-btn" style="text-align:center; background:#222;" onclick="openQrGenerator()">+ 便データを更新 (QR)</button>
         <button class="leg-select-btn" style="text-align:center; margin-top:8px;" onclick="toggleDrawer()">閉じる</button>
       </div>
     </div>
@@ -420,7 +461,7 @@
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <div class="flight-title" style="font-size:22px;">📱 Flight QR Generator</div>
-      <button class="mode-toggle-btn" onclick="closeQrGenerator()">✕ 閉じる</button>
+      <button class="mode-toggle-btn" style="background:var(--bg-highlight); border:1px solid var(--accent); color:var(--accent); padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="closeQrGenerator()">✕ 閉じる</button>
     </div>
 
     <!-- Leg 1 -->
@@ -682,7 +723,7 @@
           showToast("便データを正常に読み込みました");
           renderApp();
         } catch (e) {
-          alert("データ展開エラー: " + e.message);
+          showToast("データ展開エラーが発生しました");
         }
       }
     }
@@ -701,7 +742,7 @@
     function renderApp() {
       if (!legsData || legsData.length === 0) {
         document.getElementById("headFlightNo").textContent = "NO DATA";
-        document.getElementById("headRoute").textContent = "右上の [📱入力/QR] から登録";
+        document.getElementById("headRoute").textContent = "メニュー ≡ から登録";
         return;
       }
 
@@ -710,7 +751,8 @@
       const master = ROUTE_MASTER[rKey] || {};
 
       document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
-      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
+      // 矢印を短縮形「→」に変更
+      document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} → ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
 
       const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
       const depTz = isIntl ? formatTzOffset(leg.DepTimeZone || master.DepTimeZone) : "";
@@ -765,7 +807,7 @@
       legsData.forEach((leg, i) => {
         const btn = document.createElement("button");
         btn.className = `leg-select-btn ${i === currentLegIndex ? 'active' : ''}`;
-        btn.innerHTML = `Leg ${i+1}: ${leg.FlightNo || '---'}<br><span style="font-size:15px; color:var(--text-sub);">${leg.Dep} ➔ ${leg.Arr}</span>`;
+        btn.innerHTML = `Leg ${i+1}: ${leg.FlightNo || '---'}<br><span style="font-size:14px; color:var(--text-sub);">${leg.Dep} → ${leg.Arr}</span>`;
         btn.onclick = () => {
           currentLegIndex = i;
           renderApp();
@@ -787,6 +829,11 @@
     function toggleDrawer() {
       document.getElementById("drawer").classList.toggle("open");
       document.getElementById("overlay").classList.toggle("open");
+    }
+
+    function openQrGeneratorFromDrawer() {
+      toggleDrawer();
+      openQrGenerator();
     }
 
     /* --- スコークキーパッド (0-7, 4桁で即時保存) --- */
@@ -1013,7 +1060,7 @@
       }
 
       if (rawLegs.length === 0) {
-        alert("少なくとも1便の便名（数字）と区間を入力してください");
+        showToast("便名と区間を入力してください");
         return;
       }
 
