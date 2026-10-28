@@ -180,6 +180,150 @@ VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → SAPTI at 4T or assigned → 34Rへ
 他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
 STAR開始点の高度FL155以上ならベタ打ち","To RJTT via KIZNA2 / ESKOB3, FPR, 1,200'",9,9
+HND-KMJ,21',632',"800'
+3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,"BAMBO FL340 / BALIE FL280 / IGLAT 13,000'","Fukuoka
+APP: 127.0 / 126.5
+
+Kumamoto
+TWR: 118.7
+GND: 121.8",false,-,"ILS 07 → KAZMA
+07 → VFR APPR → VSL07 → <ASONO> → FA消 → KAZMAとF5P40繋
+RNP 07 → KAZMA
+25 side VFR APPR → VSL25 → <ASONO> → FA消 → KMJ3AとKAZMA繋","KURA : 3,675' 
+ASOO : 5,223'
+LF07 → /4, /2 (4nm FNL)",FUK APP 30秒 → 7600/TWR/VFR → KUE 5.5T or Assingned,"・愛称「阿蘇くまもと空港」：07:30 ~ 21:30 JST
+
+・BALIE-APOGU間は高度変更原則不可
+
+Visual Approach
+・TPA 2,400' (1,800' AAL)のため降下開始はPI or 17秒
+・IGLATは250ktで通過
+・6,500'への降下ではSPD BRK必須
+・Square Baseの場合について
+→BT07 or LF07の4nmでG/D, 2nmで降下
+
+ILS 07 Circling 25 (MISMIから開始)
+・RWY25→VFR APPR→ICR25→FA消
+
+LVPの条件
+①LVP 600' or 1,600m以下
+②900' or3,000m以下 with 要求 
+③要求","To RJFT via NINOX4, FPR, FL200",9,9
+KMJ-HND,632',21',"3,000'",121.8,118.7,130.17 (ASO),"07 → MIFNE 1 → <SPIDE>
+25 → MIFNE 1 → <SPIDE>","TAKAS 297/6, MISMI","EFRPあり
+767はエプロン内Push Back不可
+""Short P/B approved"" を言われる。",SPENS FL220,"APP: 119.1 / 119.4
+TWR: 118.1 / 124.35 / 118.57 / 118.72
+GND: 121.7 / 118.22 / 121.62",false,-,"<西から北風>
+ILS Z 34L → XAC/AKSEL 1A
+ILS X 34L → XAC/ALSEL 1K → <KAIHO>
+ILS Z 34R → XAC/AKSEL2C → <CREAM>
+RNVV 34R → XAC/AKSEL 2H 
+ILS Z 34R → XAC/AKSEL 2H → Discon
+[Night] ILS Y 34R → XAC/AKSEL NIGHT → <KAIHO>
+
+<西から南風>
+LDA W 22(RNVT22 or LDAW22) → XAC/AKSEL1B → <BACON>
+LDA W 23 → XAC/AKSEL 1B → Discon (RV to DEANE)
+ILS 22 → XAC/AKSEL 1N → <NYLON>
+RNP 16R → XAC/AKSEL R → <NATTY>
+RNP 16L → XAC/AKSEL L → <SANDY>
+
+<北から北風>
+ILS Z 34R → GODIN 1C
+ILS Z 34L → GODIN 1C → <CREAM>
+RNVV34R → GODIN 1H
+ILS X 34L → GODIN 2K → <KAIHO>
+
+<北から南風>
+LDA W 23 → GODIN 1D → <DATUM>
+LDA W 22 → GODIN 1D → Discon (RV to BEAST)
+ILS Z 23 → GODIN 1S → <STEAM>
+ILS 22 → GODIN 1S → <STEAM>
+RNP 16R → GODIN R → <NATTY>
+RNP 16L → GODIN L → <SANDY>
+
+<深夜 23:00~06:00>
+ILS Y 34R → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → SAPTI at 4T or assigned → 34Rへ
+他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
+STAR開始点の高度FL155以上ならベタ打ち","To RJTT via MIFNE1, SPIDE trans, FPR, 6,000'",9,9
+HND-TKS,21',37',"800'
+3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
+15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,"IBENO FL280 / SINGU FL180 / DINAH 10,000'","KIX
+APP: 沢山
+
+Tokushima
+APP: 120.1 / 124.0
+TWR: 118.0 / 126.2
+GND: 118.0",false,-,"ILS Z 29 → LIGUSとDATIS繋
+ILS Y 29 → TSCとDATIS繋
+RNP 29 → <DATIS>
+
+CIR11について
+RWY11 → VFR11 → VSL11 or S → DATIS-DW繋ぐTPA1500'
+→Minima830' HDG170降下 北1.5NM幅 Missed3000
++→ FIX [OTANI]   早めのConfiguration",,"APP/RDR 1分 (SAR15s, PAR5s) → 7600/TWR/VFR → TSC or DATIS 3.5T or Assingned","愛称「徳島阿波踊り空港」 　24時間 (JCAB 07:00 - 21:30 JST)
+・RWY 29 LDG優先 Tail 5kt, Cross 10ktまで
+・ATIS無し
+・Marking自衛隊式
+・KIX APPにWX通報不要
+・眉山 1,128' → 230/5.0
+
+ILS 11 Circlingについて
+11→ ICR11→RWとICRFN繋→GUNVIとDATIS繋 + Fix [OTANI]
+
+※ VSL11の上 or 内側！鳴門IC と TSC 3.0までにBase Turn
+
+Visual 11 → ""South Side"" をRQしよう！
+▪ ①RWY11 ②VFR ③VSL11 or S ④DATIS-DW繋ぐ   TPA1500'
+→ DW幅：北2.0NM, 南2.5NM, Northは早めにLDG CONFIG","To RJOS via LAXAS4, FPR, FL200",9,9
+TKS-HND,37',21',800',118.0,126.2,130.175 (TOKUSHIMA),"11 → HONMA 2 → <KILAP>
+28 → HONMA 2 → <KILAP>",,"・Initial CTC時の通報高度注意 (FL150)
+・離陸 RWY11優先利用 Tail 5kt, Cross 10ktまで
+
+徳島空港運用時間 24時間だが、、、
+JCABは07:00 - 21:30 JST",SELNO FL210,"APP: 119.1 / 119.4
+TWR: 118.1 / 124.35 / 118.57 / 118.72
+GND: 121.7 / 118.22 / 121.62",false,-,"<西から北風>
+ILS Z 34L → XAC/AKSEL 1A
+ILS X 34L → XAC/ALSEL 1K → <KAIHO>
+ILS Z 34R → XAC/AKSEL2C → <CREAM>
+RNVV 34R → XAC/AKSEL 2H 
+ILS Z 34R → XAC/AKSEL 2H → Discon
+[Night] ILS Y 34R → XAC/AKSEL NIGHT → <KAIHO>
+
+<西から南風>
+LDA W 22(RNVT22 or LDAW22) → XAC/AKSEL1B → <BACON>
+LDA W 23 → XAC/AKSEL 1B → Discon (RV to DEANE)
+ILS 22 → XAC/AKSEL 1N → <NYLON>
+RNP 16R → XAC/AKSEL R → <NATTY>
+RNP 16L → XAC/AKSEL L → <SANDY>
+
+<北から北風>
+ILS Z 34R → GODIN 1C
+ILS Z 34L → GODIN 1C → <CREAM>
+RNVV34R → GODIN 1H
+ILS X 34L → GODIN 2K → <KAIHO>
+
+<北から南風>
+LDA W 23 → GODIN 1D → <DATUM>
+LDA W 22 → GODIN 1D → Discon (RV to BEAST)
+ILS Z 23 → GODIN 1S → <STEAM>
+ILS 22 → GODIN 1S → <STEAM>
+RNP 16R → GODIN R → <NATTY>
+RNP 16L → GODIN L → <SANDY>
+
+<深夜 23:00~06:00>
+ILS Y 34R → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+LDA Y 23 → XAC/AKSEL/MESSE NIGHT → <KAIHO>
+VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → SAPTI at 4T or assigned → 34Rへ
+他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
+STAR開始点の高度FL155以上ならベタ打ち","To RJTT via HONMA2, KILAP trans, FPR, FL150",9,9
 HND-SIN,21',22',"800'
 3,000' [22のみ]",121.82,121.7 (Dom) / 121.62 (INT),130.1 (OTA),"7:00~11:30 JSTはB
 15:00~19:00のうち3時間はC","34REF R-120, FUJI, SKYTR, ",RTE5 : A-R-S,-,"APP: 124.3 / 124.05
