@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cockpit Assistant</title>
-  <!-- 外部CDNではなくリポジトリ内のローカルスクリプトを参照 -->
   <script src="./qrcode.min.js"></script>
   <style>
     :root {
@@ -42,14 +41,14 @@
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
     .menu-btn { background: none; border: none; color: var(--accent); font-size: 30px; cursor: pointer; padding: 4px; }
-    .flight-title { font-size: 28px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
+    .flight-title { font-size: 26px; font-weight: 800; color: #FFF; letter-spacing: 1px; }
     .route-info { font-size: 19px; font-weight: 600; color: var(--accent); }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .header-times { font-size: 17px; font-family: monospace; font-weight: bold; text-align: right; line-height: 1.25; }
     .mode-toggle-btn {
       background: var(--bg-highlight); border: 1px solid var(--accent);
-      color: var(--accent); padding: 6px 10px; border-radius: 6px;
-      font-size: 13px; font-weight: bold; cursor: pointer;
+      color: var(--accent); padding: 8px 12px; border-radius: 6px;
+      font-size: 14px; font-weight: bold; cursor: pointer;
     }
 
     /* タブ切り替えバー */
@@ -131,14 +130,15 @@
     .key-btn:active { background: #555; }
     .key-btn.clr { background: #442; color: #F88; }
 
-    /* PAX タップ入力枠 */
-    .pax-tap-display {
+    /* タップ入力枠（PAX & QR入力画面共通） */
+    .tap-display-box {
       background: var(--bg-inner); border: 1.5px solid var(--border);
-      border-radius: 8px; padding: 14px 18px; display: flex;
-      justify-content: space-between; align-items: center; cursor: pointer;
+      border-radius: 8px; padding: 10px 14px; cursor: pointer;
+      display: flex; flex-direction: column; justify-content: center;
     }
-    .pax-tap-val { font-family: monospace; font-size: 28px; font-weight: 900; color: #FFF; }
-    .pax-tap-hint { font-size: 14px; color: var(--accent); }
+    .tap-display-box:active { border-color: var(--accent); }
+    .tap-label-mini { font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 2px; }
+    .tap-val-text { font-family: monospace; font-size: 20px; font-weight: 800; color: #FFF; }
 
     /* PAX 選択ボタン群 */
     .pax-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
@@ -168,7 +168,7 @@
     .modal-title { font-size: 18px; font-weight: bold; color: var(--accent); }
     .modal-display {
       background: #000; border: 1px solid var(--border); border-radius: 8px;
-      padding: 12px; font-family: monospace; font-size: 36px; font-weight: bold;
+      padding: 12px; font-family: monospace; font-size: 34px; font-weight: bold;
       color: #FFF; text-align: right; margin-bottom: 14px; min-height: 44px;
     }
     .modal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -206,17 +206,31 @@
     }
     .leg-select-btn.active { border-color: var(--accent); background: #332B1A; }
 
-    /* QRジェネレーター（スマホ用画面） */
-    #qrGeneratorView { display: none; padding: 20px 16px; max-width: 600px; margin: 0 auto; }
-    .leg-input-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
-    .leg-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    /* ==================== 統一デザイン版 QRジェネレーター ==================== */
+    #qrGeneratorView { display: none; padding: 16px; max-width: 650px; margin: 0 auto; }
+    .gen-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .text-input-field {
+      width: 100%; background: var(--bg-inner); border: 1.5px solid var(--border);
+      border-radius: 8px; color: #FFF; font-family: monospace; font-size: 20px;
+      font-weight: 800; padding: 8px 12px; text-transform: uppercase;
+    }
+    .text-input-field:focus { border-color: var(--accent); outline: none; }
     .btn-main {
       width: 100%; background: var(--accent); color: #000; border: none;
       padding: 16px; border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 10px;
     }
+    .btn-main:active { background: #d4952b; }
+    .btn-clear-leg {
+      background: none; border: none; color: var(--accent-red); font-size: 14px;
+      font-weight: bold; cursor: pointer; padding: 4px 8px;
+    }
     #qrcodeArea {
-      margin-top: 20px; background: #FFF; padding: 20px; border-radius: 12px;
-      display: none; flex-direction: column; align-items: center; justify-content: center;
+      margin-top: 20px; background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px 16px; display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    #qrcodeWrapper {
+      background: #FFF; padding: 14px; border-radius: 10px; display: inline-block;
     }
   </style>
 </head>
@@ -233,7 +247,6 @@
         </div>
       </div>
       <div class="header-right">
-        <!-- STD / STA (国際線時は時差を自動付与) -->
         <div class="header-times" id="headTimes">STD ----Z<br>STA ----Z</div>
         <button class="mode-toggle-btn" onclick="openQrGenerator()">📱入力/QR</button>
       </div>
@@ -286,9 +299,9 @@
 
         <div class="card">
           <div class="section-title">Total Passengers</div>
-          <div class="pax-tap-display" onclick="openTotalPaxKeypad()">
-            <span class="pax-tap-val" id="totalPaxDisplay">---</span>
-            <span class="pax-tap-hint">タップして入力 ➔</span>
+          <div class="tap-display-box" onclick="openTotalPaxKeypad()" style="padding:14px 18px; flex-direction:row; justify-content:space-between; align-items:center;">
+            <span class="tap-val-text" id="totalPaxDisplay" style="font-size:28px;">---</span>
+            <span style="font-size:14px; color:var(--accent);">タップして入力 ➔</span>
           </div>
         </div>
 
@@ -379,7 +392,7 @@
   <div id="keypadModal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title" id="modalKeypadTitle">PAX 入力</div>
+        <div class="modal-title" id="modalKeypadTitle">テンキー入力</div>
         <button style="background:none; border:none; color:#AAA; font-size:24px; cursor:pointer;" onclick="closeModalKeypad()">✕</button>
       </div>
       <div class="modal-display" id="modalDisplay">0</div>
@@ -403,58 +416,132 @@
 
   <div id="toast"></div>
 
-  <!-- ==================== 3. スマホ用QR生成画面 ==================== -->
+  <!-- ==================== 3. 統一デザイン版 QRジェネレーター ==================== -->
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2 style="margin:0; color:var(--accent);">Flight QR Generator</h2>
+      <div class="flight-title" style="font-size:22px;">📱 Flight QR Generator</div>
       <button class="mode-toggle-btn" onclick="closeQrGenerator()">✕ 閉じる</button>
     </div>
 
-    <div class="leg-input-card">
-      <div style="font-weight:bold; color:var(--accent);">Leg 1</div>
-      <div class="leg-input-grid">
-        <input type="text" id="in_f1" placeholder="便名 (例: JL123)">
-        <input type="text" id="in_route1" placeholder="区間 (例: HND-SIN)">
-        <input type="text" id="in_std1" placeholder="STD (例: 0130)">
-        <input type="text" id="in_sta1" placeholder="STA (例: 0735)">
+    <!-- Leg 1 -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span class="field-label-badge" style="margin-bottom:0;">LEG 1</span>
+        <button class="btn-clear-leg" onclick="clearLegInput(1)">クリア</button>
+      </div>
+      <div class="gen-grid-row">
+        <div class="tap-display-box" onclick="openFlightNoKeypad(1)">
+          <div class="tap-label-mini">FLIGHT NO</div>
+          <div class="tap-val-text" id="disp_f1">JL ---</div>
+        </div>
+        <div>
+          <div class="tap-label-mini" style="margin-left:4px;">ROUTE (DEP-ARR)</div>
+          <input type="text" id="in_route1" class="text-input-field" placeholder="HND-CTS" autocapitalize="characters">
+        </div>
+      </div>
+      <div class="gen-grid-row" style="margin-bottom:0;">
+        <div class="tap-display-box" onclick="openTimeKeypad(1, 'std')">
+          <div class="tap-label-mini">STD (Z)</div>
+          <div class="tap-val-text" id="disp_std1">----</div>
+        </div>
+        <div class="tap-display-box" onclick="openTimeKeypad(1, 'sta')">
+          <div class="tap-label-mini">STA (Z)</div>
+          <div class="tap-val-text" id="disp_sta1">----</div>
+        </div>
       </div>
     </div>
 
-    <div class="leg-input-card">
-      <div style="font-weight:bold; color:var(--accent);">Leg 2 (任意)</div>
-      <div class="leg-input-grid">
-        <input type="text" id="in_f2" placeholder="便名 (例: JL126)">
-        <input type="text" id="in_route2" placeholder="区間 (例: SIN-HND)">
-        <input type="text" id="in_std2" placeholder="STD">
-        <input type="text" id="in_sta2" placeholder="STA">
+    <!-- Leg 2 -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span class="field-label-badge" style="margin-bottom:0;">LEG 2 (任意)</span>
+        <button class="btn-clear-leg" onclick="clearLegInput(2)">クリア</button>
+      </div>
+      <div class="gen-grid-row">
+        <div class="tap-display-box" onclick="openFlightNoKeypad(2)">
+          <div class="tap-label-mini">FLIGHT NO</div>
+          <div class="tap-val-text" id="disp_f2">JL ---</div>
+        </div>
+        <div>
+          <div class="tap-label-mini" style="margin-left:4px;">ROUTE (DEP-ARR)</div>
+          <input type="text" id="in_route2" class="text-input-field" placeholder="CTS-HND" autocapitalize="characters">
+        </div>
+      </div>
+      <div class="gen-grid-row" style="margin-bottom:0;">
+        <div class="tap-display-box" onclick="openTimeKeypad(2, 'std')">
+          <div class="tap-label-mini">STD (Z)</div>
+          <div class="tap-val-text" id="disp_std2">----</div>
+        </div>
+        <div class="tap-display-box" onclick="openTimeKeypad(2, 'sta')">
+          <div class="tap-label-mini">STA (Z)</div>
+          <div class="tap-val-text" id="disp_sta2">----</div>
+        </div>
       </div>
     </div>
 
-    <div class="leg-input-card">
-      <div style="font-weight:bold; color:var(--accent);">Leg 3 (任意)</div>
-      <div class="leg-input-grid">
-        <input type="text" id="in_f3" placeholder="便名">
-        <input type="text" id="in_route3" placeholder="区間">
-        <input type="text" id="in_std3" placeholder="STD">
-        <input type="text" id="in_sta3" placeholder="STA">
+    <!-- Leg 3 -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span class="field-label-badge" style="margin-bottom:0;">LEG 3 (任意)</span>
+        <button class="btn-clear-leg" onclick="clearLegInput(3)">クリア</button>
+      </div>
+      <div class="gen-grid-row">
+        <div class="tap-display-box" onclick="openFlightNoKeypad(3)">
+          <div class="tap-label-mini">FLIGHT NO</div>
+          <div class="tap-val-text" id="disp_f3">JL ---</div>
+        </div>
+        <div>
+          <div class="tap-label-mini" style="margin-left:4px;">ROUTE (DEP-ARR)</div>
+          <input type="text" id="in_route3" class="text-input-field" placeholder="HND-FUK" autocapitalize="characters">
+        </div>
+      </div>
+      <div class="gen-grid-row" style="margin-bottom:0;">
+        <div class="tap-display-box" onclick="openTimeKeypad(3, 'std')">
+          <div class="tap-label-mini">STD (Z)</div>
+          <div class="tap-val-text" id="disp_std3">----</div>
+        </div>
+        <div class="tap-display-box" onclick="openTimeKeypad(3, 'sta')">
+          <div class="tap-label-mini">STA (Z)</div>
+          <div class="tap-val-text" id="disp_sta3">----</div>
+        </div>
       </div>
     </div>
 
-    <div class="leg-input-card">
-      <div style="font-weight:bold; color:var(--accent);">Leg 4 (任意)</div>
-      <div class="leg-input-grid">
-        <input type="text" id="in_f4" placeholder="便名">
-        <input type="text" id="in_route4" placeholder="区間">
-        <input type="text" id="in_std4" placeholder="STD">
-        <input type="text" id="in_sta4" placeholder="STA">
+    <!-- Leg 4 -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span class="field-label-badge" style="margin-bottom:0;">LEG 4 (任意)</span>
+        <button class="btn-clear-leg" onclick="clearLegInput(4)">クリア</button>
+      </div>
+      <div class="gen-grid-row">
+        <div class="tap-display-box" onclick="openFlightNoKeypad(4)">
+          <div class="tap-label-mini">FLIGHT NO</div>
+          <div class="tap-val-text" id="disp_f4">JL ---</div>
+        </div>
+        <div>
+          <div class="tap-label-mini" style="margin-left:4px;">ROUTE (DEP-ARR)</div>
+          <input type="text" id="in_route4" class="text-input-field" placeholder="FUK-HND" autocapitalize="characters">
+        </div>
+      </div>
+      <div class="gen-grid-row" style="margin-bottom:0;">
+        <div class="tap-display-box" onclick="openTimeKeypad(4, 'std')">
+          <div class="tap-label-mini">STD (Z)</div>
+          <div class="tap-val-text" id="disp_std4">----</div>
+        </div>
+        <div class="tap-display-box" onclick="openTimeKeypad(4, 'sta')">
+          <div class="tap-label-mini">STA (Z)</div>
+          <div class="tap-val-text" id="disp_sta4">----</div>
+        </div>
       </div>
     </div>
 
     <button class="btn-main" onclick="generateFlightQR()">QRコードを生成する</button>
 
     <div id="qrcodeArea">
-      <div id="qrcode"></div>
-      <div style="color:#000; font-weight:bold; margin-top:14px; text-align:center; font-size:16px;">
+      <div id="qrcodeWrapper">
+        <div id="qrcode"></div>
+      </div>
+      <div style="color:var(--text-main); font-weight:bold; margin-top:16px; text-align:center; font-size:16px;">
         会社iPadの「通常カメラ」で<br>このQRコードをかざしてください
       </div>
     </div>
@@ -468,9 +555,19 @@
     let legsData = [];
     let octalBuffer = "";
 
-    let modalMode = null;
+    // テンキーモーダル制御用
+    let modalMode = null; // 'TOTAL_PAX', 'SPECIAL_PAX', 'FREE_PAX', 'FLIGHT_NUM', 'TIME_STD', 'TIME_STA'
     let modalTargetCode = "";
+    let modalTargetLeg = 1;
     let modalBuffer = "";
+
+    // QR入力フォーム内部保持用
+    let rawLegInputs = [
+      { flightNum: "", std: "", sta: "" },
+      { flightNum: "", std: "", sta: "" },
+      { flightNum: "", std: "", sta: "" },
+      { flightNum: "", std: "", sta: "" }
+    ];
 
     window.addEventListener("DOMContentLoaded", async () => {
       loadMasterFromStorage();
@@ -590,7 +687,6 @@
       }
     }
 
-    /* --- 時差文字列のフォーマット (+9, -5 など) --- */
     function formatTzOffset(val) {
       if (val === undefined || val === null) return "";
       let s = String(val).trim();
@@ -616,13 +712,11 @@
       document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
       document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} ──▶ ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
 
-      // ★ 国際線判定と STD/STA の時差表示
       const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
       const depTz = isIntl ? formatTzOffset(leg.DepTimeZone || master.DepTimeZone) : "";
       const arrTz = isIntl ? formatTzOffset(leg.ArrTimeZone || master.ArrTimeZone) : "";
       document.getElementById("headTimes").innerHTML = `STD ${leg.STD || '----'}Z${depTz}<br>STA ${leg.STA || '----'}Z${arrTz}`;
 
-      // ATC Clearance
       const currentClearance = (leg.ATC_Clearance !== undefined && leg.ATC_Clearance !== "")
         ? leg.ATC_Clearance
         : (master.ExpectedClearance || leg.ExpectedClearance || "");
@@ -642,7 +736,6 @@
       document.getElementById("depFix").textContent = leg.DepFixPage || master.DepFixPage || "None";
       document.getElementById("depNotes").textContent = leg.DepNotes || master.DepNotes || "None";
 
-      // Next Leg
       const nextLeg = legsData[currentLegIndex + 1];
       const nextLegCard = document.getElementById("nextLegCard");
       if (nextLeg && nextLeg.FlightNo) {
@@ -659,7 +752,6 @@
       document.getElementById("lossCom").textContent = leg.LossCom || master.LossCom || "None";
       document.getElementById("arrNotes").textContent = leg.ArrNotes || master.ArrNotes || "None";
 
-      // Enroute ACC
       document.getElementById("accCard").style.display = isIntl ? "block" : "none";
       document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || master.EnrouteACC || "";
 
@@ -719,7 +811,25 @@
       }
     }
 
-    /* --- 電卓風テンキーモーダル --- */
+    /* --- 電卓風テンキーモーダル制御（汎用版） --- */
+    function openFlightNoKeypad(leg) {
+      modalMode = 'FLIGHT_NUM';
+      modalTargetLeg = leg;
+      document.getElementById("modalKeypadTitle").textContent = `Leg ${leg} 便名 (JL)`;
+      modalBuffer = rawLegInputs[leg - 1].flightNum;
+      updateModalDisplay();
+      document.getElementById("keypadModal").classList.add("open");
+    }
+
+    function openTimeKeypad(leg, type) {
+      modalMode = type === 'std' ? 'TIME_STD' : 'TIME_STA';
+      modalTargetLeg = leg;
+      document.getElementById("modalKeypadTitle").textContent = `Leg ${leg} ${type.toUpperCase()} (Z)`;
+      modalBuffer = type === 'std' ? rawLegInputs[leg - 1].std : rawLegInputs[leg - 1].sta;
+      updateModalDisplay();
+      document.getElementById("keypadModal").classList.add("open");
+    }
+
     function openTotalPaxKeypad() {
       modalMode = 'TOTAL_PAX';
       document.getElementById("modalKeypadTitle").textContent = "Total PAX 入力";
@@ -771,16 +881,33 @@
     }
 
     function updateModalDisplay() {
-      document.getElementById("modalDisplay").textContent = modalBuffer || "0";
+      const el = document.getElementById("modalDisplay");
+      if (modalMode === 'FLIGHT_NUM') {
+        el.textContent = modalBuffer ? `JL ${modalBuffer}` : "JL ---";
+      } else if (modalMode === 'TIME_STD' || modalMode === 'TIME_STA') {
+        el.textContent = modalBuffer ? `${modalBuffer}Z` : "----Z";
+      } else {
+        el.textContent = modalBuffer || "0";
+      }
     }
 
     function submitModalKeypad() {
-      const val = parseInt(modalBuffer, 10);
-      if (modalMode === 'TOTAL_PAX') {
+      if (modalMode === 'FLIGHT_NUM') {
+        rawLegInputs[modalTargetLeg - 1].flightNum = modalBuffer;
+        document.getElementById(`disp_f${modalTargetLeg}`).textContent = modalBuffer ? `JL ${modalBuffer}` : "JL ---";
+      } else if (modalMode === 'TIME_STD') {
+        rawLegInputs[modalTargetLeg - 1].std = modalBuffer;
+        document.getElementById(`disp_std${modalTargetLeg}`).textContent = modalBuffer || "----";
+      } else if (modalMode === 'TIME_STA') {
+        rawLegInputs[modalTargetLeg - 1].sta = modalBuffer;
+        document.getElementById(`disp_sta${modalTargetLeg}`).textContent = modalBuffer || "----";
+      } else if (modalMode === 'TOTAL_PAX') {
+        const val = parseInt(modalBuffer, 10);
         legsData[currentLegIndex].TotalPAX = isNaN(val) ? "" : String(val);
         saveToStorage();
         document.getElementById("totalPaxDisplay").textContent = legsData[currentLegIndex].TotalPAX || "---";
       } else if (modalMode === 'SPECIAL_PAX' || modalMode === 'FREE_PAX') {
+        const val = parseInt(modalBuffer, 10);
         const count = isNaN(val) ? 1 : val;
         if (!legsData[currentLegIndex].specialPaxList) legsData[currentLegIndex].specialPaxList = [];
         legsData[currentLegIndex].specialPaxList.push({
@@ -848,7 +975,7 @@
       setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    /* --- QRジェネレーター --- */
+    /* --- 統一デザイン版 QRジェネレーター制御 --- */
     function openQrGenerator() {
       document.getElementById("cockpitView").style.display = "none";
       document.getElementById("qrGeneratorView").style.display = "block";
@@ -856,6 +983,7 @@
       document.getElementById("overlay").classList.remove("open");
       window.scrollTo(0, 0);
     }
+
     function closeQrGenerator() {
       document.getElementById("qrGeneratorView").style.display = "none";
       document.getElementById("cockpitView").style.display = "block";
@@ -863,20 +991,29 @@
       window.scrollTo(0, 0);
     }
 
+    function clearLegInput(leg) {
+      rawLegInputs[leg - 1] = { flightNum: "", std: "", sta: "" };
+      document.getElementById(`disp_f${leg}`).textContent = "JL ---";
+      document.getElementById(`in_route${leg}`).value = "";
+      document.getElementById(`disp_std${leg}`).textContent = "----";
+      document.getElementById(`disp_sta${leg}`).textContent = "----";
+    }
+
     function generateFlightQR() {
       const rawLegs = [];
       for (let i = 1; i <= 4; i++) {
-        const f = document.getElementById(`in_f${i}`).value.trim();
-        const r = document.getElementById(`in_route${i}`).value.trim().toUpperCase();
-        const s = document.getElementById(`in_std${i}`).value.trim();
-        const a = document.getElementById(`in_sta${i}`).value.trim();
+        const fNum = rawLegInputs[i - 1].flightNum;
+        const f = fNum ? `JL${fNum}` : "";
+        const r = (document.getElementById(`in_route${i}`).value || "").trim().toUpperCase();
+        const s = rawLegInputs[i - 1].std || "";
+        const a = rawLegInputs[i - 1].sta || "";
         if (f && r) {
           rawLegs.push({ f: f, r: r, s: s, a: a });
         }
       }
 
       if (rawLegs.length === 0) {
-        alert("少なくとも1便の便名と区間を入力してください");
+        alert("少なくとも1便の便名（数字）と区間を入力してください");
         return;
       }
 
@@ -888,8 +1025,8 @@
       qrContainer.innerHTML = "";
       new QRCode(qrContainer, {
         text: targetUrl,
-        width: 250,
-        height: 250,
+        width: 240,
+        height: 240,
         correctLevel: QRCode.CorrectLevel.M
       });
 
