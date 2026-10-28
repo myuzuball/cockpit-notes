@@ -542,3 +542,60 @@ G/Dについて
 ・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
 ","To RJAA via LAMEN1, mt 900m",8,9
+NRT-HAN,135',43',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
+16R → OLVAN2 → <SAMUS> or NO Trans
+34L → BORLO2
+16R → BORLO2
+34L → TETRA8 → <ENPAR>
+16R → TETRA8 → <ENPAR>
+34L → PIGOK2
+16R → PIGOK2
+34L → REDEK2
+16R → REDEK2",RJAA /416,"Taxi Coded RTE確認
+
+34LGT
+34LA9GT
+
+SPID実施時Initial WPTの確認",LON FL240,"Noibai
+Terminal: 125.1
+ARR: 121.0
+TWR: 118.4
+GND: 121.9",TRUE,,"ILS X 11L → NAKHA 3H(3E) → <VILOX>
+ILS X 11L → NAKHA 3J(3K) → <NB362>",,,"コリドー: FL240、280、300、400
+
+旧ICAO方式
+Transition Level：FL100
+DILEN 3H/3F/3M/3Jなども考えられる
+NAKHA 3Jもありえる
+
+12nm to T/D : Max 200kt
+5nm to T/D : Max 160kt
+
+地上XPDR Modeなし","To VVNB via REDEK2, FPR, FL240",9,7
+HAN-NRT,43',135',800',119.25,121.9,Company Radio無し,"11R → NAKHA 3A
+29L → NAKHA 3C",,"地上XPDR無し
+All RWY Non-Grooved
+NADP 2 ○ / D-ATISあり
+
+EOBTの15分前までにに119.25下記を通報
+""JL 6740, destination NRT, spot　　, FL""
+
+→TSATの±5分 以内 GNDにP/B and ENG Start要求
+
+コリドー: FL250、290、310、390",MAMAS FL240,"APP: 124.4 / 127.7
+TWR: 118.35 / 118.2 (A Rwy)
+GND: 121.95 / 121.85
+Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
+ILS Y/Z 16L → RUTAS G → GEMIN
+ILS Y/Z 34R → LUBRA T → TYLER
+ILS Y/Z 16L → LUBRA G → GEMIN
+ILS Y/Z 34R → SWAMP T → TYLER
+ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → GIINA at 4T or assigned → 34Lへ
+16 in use → LAKES at 6T or assigned → 16Rへ","RUTAS G ARR → ILS Y 16Lの場合、RVでのShort CutによってCDU上のETAから最大8分くらいは早着できる。
+
+170kt until 7 DMEなどの指示があり得る。
+G/Dについて
+・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
+・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
+","To RJAA via NAKHA 3A/3C, Rwy　　R474, maintain 5T/7T/FL160, ",7,9
