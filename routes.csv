@@ -559,8 +559,7 @@ TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
 
 ・ILS 6LのPROC Turn注意
 ・Rwy 6LのAimingはトーフ前縁","To PGUM via OLVAN 2, FPR, FL230",9,10
-GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋","UNZ R-330
-TFRC2 /1","・Boading開始は30分前をRQされる。
+GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋",TFRC2 /1,"・Boading開始は30分前をRQされる。
 ・GNDよりClearance取得
 　→RampにRQ P/B → RampにRQ Taxi でCTC GND指示
 
@@ -580,7 +579,7 @@ ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
 G/Dについて
 ・34L進入時	IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時	ITJ 13.6 DME (NRE 14.0 DME)
-","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8, SQ　　　",10,9
+","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8",10,9
 NGO-PVG,12',12',800',121.85,121.8,131.85 (NAGOYA),"18 → IKAROS 4 → HIKNE
 36 → IKAROS 4 → HIKNE",,DCLアリ,-,"Shanghai
 APP: 125.62 / 125.4 / 123.8
