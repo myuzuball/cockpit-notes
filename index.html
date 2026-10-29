@@ -868,7 +868,7 @@
         const isDone = !!statusMap[item];
         const btn = document.createElement("button");
         btn.className = `prep-chk-btn ${isDone ? 'done' : ''}`;
-        btn.innerHTML = `${item}${isDone ? ' <span style="font-size:12px; margin-left:2px;">✓</span>' : ''}`;
+        btn.textContent = item;
         btn.onclick = () => togglePrepReminder(item);
         container.appendChild(btn);
       });
