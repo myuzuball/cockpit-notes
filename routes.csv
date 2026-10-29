@@ -547,23 +547,27 @@ Agana Ramp: 121.6",TRUE,"""Contact Guam Center 118.7 at 250nm out of Guam, SQ210
 RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
 TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
 ・ATISはVoice
-・RTE2候補 → RWY 06R/24L
 ・Transition Level FL180
 
 ・着陸後はGND飛ばしてRamp
 
+・ILS 6LのPROC TurnがLegに入っていないか注意
+・Rwy 6LのAimingはトーフ前縁
+
+・Direcgt OBALE, descend at pilot's discretion maintain 3,000ft
+→ その後RVによってFinalに誘導される。
+""HDG 090, maintain 2,600ft until establish, cleared for ILS Rwy 6L approach""
+
 ・smからmへの単位換算  [OMS 6.2.1.1 単位の換算について]
 ・RWY 06は受け 24は下り
 　06L/24R：±0.59%
-　06R/24L：±0.70%
-
-・ILS 6LのPROC Turn注意
-・Rwy 6LのAimingはトーフ前縁","To PGUM via OLVAN 2, FPR, FL230",9,10
+　06R/24L：±0.70%","To PGUM via OLVAN 2, FPR, FL230",9,10
 GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋",TFRC2 /1,"・Boading開始は30分前をRQされる。
 ・GNDよりClearance取得
 　→RampにRQ P/B → RampにRQ Taxi でCTC GND指示
 
-・Fly RWY HDG → HDGを維持する。(Trackズレ○)",MAMAS FL240,"APP: 124.4 / 127.7
+・Fly RWY HDG → HDGを維持する。(Trackズレ○)
+・TO Clearance時に ""at 900 Turn Right HDG 100"" という場合等あり",MAMAS FL240,"APP: 124.4 / 127.7
 TWR: 118.35 / 118.2 (A Rwy)
 GND: 121.95 / 121.85
 Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
