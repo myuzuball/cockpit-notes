@@ -544,7 +544,10 @@ Agana Ramp: 121.6",TRUE,"""Contact Guam Center 118.7 at 250nm out of Guam, SQ210
 →CPDLC利用時もSQ 2100をセットする。","ILS 6L → UNZ/-20 - OBALE繋
 RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
 TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
+・ATISはVoice
 ・RTE2候補 → RWY 06R/24L
+・Transition Level FL180
+
 ・着陸後はGND飛ばしてRamp
 
 ・smからmへの単位換算  [OMS 6.2.1.1 単位の換算について]
@@ -552,8 +555,8 @@ TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
 　06L/24R：±0.59%
 　06R/24L：±0.70%
 
-・ATISはVoice
-・ILS 6LのPROC Turn注意","To PGUM via OLVAN 2, FPR, FL230",9,10
+・ILS 6LのPROC Turn注意
+・Rwy 6LのAimingはトーフ前縁","To PGUM via OLVAN 2, FPR, FL230",9,10
 GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋","UNZ R-330
 TFRC2 /1","・Boading開始は30分前をRQされる。
 ・GNDよりClearance取得
