@@ -185,6 +185,42 @@
     }
     .del-btn { background: var(--accent-red); color: #FFF; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
+    /* ★ Cockpit Preparation Reminder スタイル ★ */
+    .prep-reminder-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .prep-chk-btn {
+      background: var(--accent);
+      color: #000;
+      border: 1.5px solid rgba(229, 169, 60, 0.9);
+      border-radius: 8px;
+      padding: 14px 6px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    .prep-chk-btn:active {
+      transform: scale(0.97);
+    }
+    /* 完了時：グレーアウト ＆ 打ち消し線 ＆ 控えめな枠 */
+    .prep-chk-btn.done {
+      background: #252528;
+      color: #636366;
+      border-color: #3A3A3C;
+      text-decoration: line-through;
+      box-shadow: none;
+      opacity: 0.65;
+    }
+
     /* 電卓風テンキーポップアップ */
     .modal-overlay {
       position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -238,7 +274,7 @@
     }
     .leg-select-btn.active { border-color: var(--accent); background: #332B1A; }
 
-    /* ==================== 統一デザイン版 QRジェネレーター ==================== */
+    /* ==================== QRジェネレーター ==================== */
     #qrGeneratorView { display: none; padding: 16px; max-width: 650px; margin: 0 auto; }
     .gen-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .text-input-field {
@@ -289,7 +325,7 @@
       <button class="tab-btn" id="tabInflightBtn" onclick="switchTab('INFLIGHT')">🛬 IN-FLIGHT / ARR</button>
     </div>
 
-    <!-- レグ選択ドロワー (メニュー内に「📱 便データ入力 / QR生成」を統合) -->
+    <!-- レグ選択ドロワー -->
     <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -297,7 +333,7 @@
         <button style="background:none; border:none; color:var(--text-sub); font-size:24px; cursor:pointer;" onclick="toggleDrawer()">✕</button>
       </div>
 
-      <!-- 入力/QR生成ボタンをドロワー最上部に配置 -->
+      <!-- 入力/QR生成ボタンを最上部に配置 -->
       <button class="leg-select-btn" style="background:#2C2416; border:1.5px solid var(--accent); color:var(--accent); font-size:16px; font-weight:bold; margin-bottom:10px; text-align:center; padding:12px;" onclick="openQrGeneratorFromDrawer()">
         📱 便データ入力 / QR生成
       </button>
@@ -351,6 +387,15 @@
           <div class="pax-buttons" id="paxButtonContainer"></div>
           <button class="pax-code-btn" style="background:#4A3F20;" onclick="openFreePaxModal()">+ Free Entry</button>
           <div style="margin-top:14px;" id="paxListContainer"></div>
+        </div>
+
+        <!-- ★ NEW: Cockpit Preparation Reminder (Preset COM Frequencies の直上) ★ -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="section-title" style="margin-bottom:0;">Cockpit Preparation Reminder</div>
+            <button class="btn-clear-leg" style="color:var(--text-sub); font-size:13px;" onclick="resetPrepReminders()">Reset</button>
+          </div>
+          <div class="prep-reminder-grid" id="prepReminderGrid"></div>
         </div>
 
         <div class="card">
@@ -457,7 +502,7 @@
 
   <div id="toast"></div>
 
-  <!-- ==================== 3. 統一デザイン版 QRジェネレーター ==================== -->
+  <!-- ==================== 3. QRジェネレーター ==================== -->
   <div id="qrGeneratorView">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
       <div class="flight-title" style="font-size:22px;">📱 Flight QR Generator</div>
@@ -591,13 +636,20 @@
   <script>
     let ROUTE_MASTER = {};
     const PAX_CODES = ["INFT","WCHC","WCHS","WCHR","CVIP","MEDA","DEAF","BLND","DPNA","INCP","PRGN","MAMA","PRSN","UMNR","INAD","DEPO","STCR"];
+    
+    // ★ Cockpit Preparation リマインダー項目 ★
+    const PREP_REMINDERS = [
+      "ACARS INIT", "eLog", "W/B",
+      "GND Ready", "Cabin Ready", "LNAV Arm",
+      "CLR Obtain", "2 CKL’s", "SL/MEL"
+    ];
 
     let currentLegIndex = 0;
     let legsData = [];
     let octalBuffer = "";
 
     // テンキーモーダル制御用
-    let modalMode = null; // 'TOTAL_PAX', 'SPECIAL_PAX', 'FREE_PAX', 'FLIGHT_NUM', 'TIME_STD', 'TIME_STA'
+    let modalMode = null;
     let modalTargetCode = "";
     let modalTargetLeg = 1;
     let modalBuffer = "";
@@ -713,6 +765,7 @@
               STD: r.s,
               STA: r.a,
               ATC_Clearance: master.ExpectedClearance || "",
+              prepReminders: {}, // レグごとのリマインダー初期化
               ...master
             };
           });
@@ -751,7 +804,7 @@
       const master = ROUTE_MASTER[rKey] || {};
 
       document.getElementById("headFlightNo").textContent = leg.FlightNo || "JL ---";
-      // 矢印を短縮形「→」に変更
+      // 矢印を短縮形「→」で表示
       document.getElementById("headRoute").textContent = `${leg.Dep || '---'} ${leg.DepElevation || master.DepElevation || "0'"} → ${leg.Arr || '---'} ${leg.ArrElevation || master.ArrElevation || "0'"}`;
 
       const isIntl = String(leg.IsInternational || master.IsInternational).toUpperCase() === "TRUE";
@@ -798,7 +851,46 @@
       document.getElementById("enrouteAcc").textContent = leg.EnrouteACC || master.EnrouteACC || "";
 
       renderPaxList();
+      renderPrepReminders();
       renderDrawerLegs();
+    }
+
+    /* --- Cockpit Preparation リマインダー描画 & 操作 --- */
+    function renderPrepReminders() {
+      const container = document.getElementById("prepReminderGrid");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const currentLeg = legsData[currentLegIndex] || {};
+      const statusMap = currentLeg.prepReminders || {};
+
+      PREP_REMINDERS.forEach(item => {
+        const isDone = !!statusMap[item];
+        const btn = document.createElement("button");
+        btn.className = `prep-chk-btn ${isDone ? 'done' : ''}`;
+        btn.innerHTML = `${item}${isDone ? ' <span style="font-size:12px; margin-left:2px;">✓</span>' : ''}`;
+        btn.onclick = () => togglePrepReminder(item);
+        container.appendChild(btn);
+      });
+    }
+
+    function togglePrepReminder(item) {
+      if (!legsData[currentLegIndex]) return;
+      if (!legsData[currentLegIndex].prepReminders) {
+        legsData[currentLegIndex].prepReminders = {};
+      }
+      const current = !!legsData[currentLegIndex].prepReminders[item];
+      legsData[currentLegIndex].prepReminders[item] = !current;
+      saveToStorage();
+      renderPrepReminders();
+    }
+
+    function resetPrepReminders() {
+      if (!legsData[currentLegIndex]) return;
+      legsData[currentLegIndex].prepReminders = {};
+      saveToStorage();
+      renderPrepReminders();
+      showToast("リマインダーをリセットしました");
     }
 
     function renderDrawerLegs() {
@@ -1022,7 +1114,7 @@
       setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    /* --- 統一デザイン版 QRジェネレーター制御 --- */
+    /* --- QRジェネレーター制御 --- */
     function openQrGenerator() {
       document.getElementById("cockpitView").style.display = "none";
       document.getElementById("qrGeneratorView").style.display = "block";
