@@ -1301,6 +1301,12 @@ VOR A → XAC/AKSEL/MESSE V → DARKS",FUJI,"TYO APP 1分 → 7600/TWR/VFR
 34 in use → SAPTI at 4T or assigned → 34Rへ
 他 → SMILE at 4T or assigned → 23へ","TWRにSpot No.通報
 STAR開始点の高度FL155以上ならベタ打ち",,,9
+NRT-BKK,,,,,,,,,,,,,,,,,,,,
+BKK-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-CGK,,,,,,,,,,,,,,,,,,,,
+CGK-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-GMP,,,,,,,,,,,,,,,,,,,,
+GMP-NRT,,,,,,,,,,,,,,,,,,,,
 NRT-GUM,135',305',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
 16R → OLVAN2 → <SAMUS> or NO Trans
 34L → BORLO2
@@ -1361,20 +1367,25 @@ ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
 G/Dについて
 ・34L進入時        IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時        ITJ 13.6 DME (NRE 14.0 DME)","To RJAA, AF, RWY Heading, 9,000ft, EFL350, 10min, DEP Freq 118.7/119.8",10,9
-NGO-PVG,12',12',800',121.85,121.8,131.85 (NAGOYA),"18 → IKAROS 4 → HIKNE
-36 → IKAROS 4 → HIKNE",,DCLアリ,-,"Shanghai
-APP: 125.62 / 125.4 / 123.8
-
-Pudong
-TWR: 118.4 / 118.57
-GND: 121.7 (W) / 121.8 (E)
-Apron: 121.65",TRUE,,"ILS Z 34R → DUMET2 → <MAP2>
-ILS Z 16L → DUMET1 → <MP1>
-ILS Z 35L → DUMET2 → <MAP2>
-ILS Z 17R → DUMET1 → <MP1>",[PD235]  R-276,,"・LIDはSTARとAPPを通報
-・Transition : FL118
-
-・Corridor：FL240 / 280 / 300 / 400","To ZSPD via IKAROS 4, FPR, 7,000'",9,8
+NRT-HKG,,,,,,,,,,,,,,,,,,,,
+HKG-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-ICN,,,,,,,,,,,,,,,,,,,,
+ICN-NRT,,,,,,,,,,,,,,,,,,,,
+NGO-ICN,,,,,,,,,,,,,,,,,,,,
+ICN-NGO,,,,,,,,,,,,,,,,,,,,
+NRT-KOA,,,,,,,,,,,,,,,,,,,,
+KOA-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-KUL,,,,,,,,,,,,,,,,,,,,
+KUL-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-SIN,,,,,,,,,,,,,,,,,,,,
+SIN-NRT,,,,,,,,,,,,,,,,,,,,
+HND-SIN,,,,,,,,,,,,,,,,,,,,
+SIN-HND,,,,,,,,,,,,,,,,,,,,
+NRT-TPE,,,,,,,,,,,,,,,,,,,,
+TPE-NRT,,,,,,,,,,,,,,,,,,,,
+HND-TPE,,,,,,,,,,,,,,,,,,,,
+TPE-HND,,,,,,,,,,,,,,,,,,,,
+NRT-PVG,,,,,,,,,,,,,,,,,,,,
 PVG-NRT,12',135',"3,000'",121.95,121.65 (Cargo) / 122.6 (PAX),129.8 (Shanghai),"34L → LAMEN 1
 16R → LAMEN 1",,"SHA ACC: 125.625 → 120.95
 
@@ -1400,6 +1411,24 @@ ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
 G/Dについて
 ・34L進入時        IYQ 11.8 DME (NRE 14.3 DME)
 ・34R進入時        ITJ 13.6 DME (NRE 14.0 DME)","To RJAA via LAMEN 1, mt 900m",8,9
+NGO-PVG,12',12',800',121.85,121.8,131.85 (NAGOYA),"18 → IKAROS 4 → HIKNE
+36 → IKAROS 4 → HIKNE",,DCLアリ,-,"Shanghai
+APP: 125.62 / 125.4 / 123.8
+
+Pudong
+TWR: 118.4 / 118.57
+GND: 121.7 (W) / 121.8 (E)
+Apron: 121.65",TRUE,,"ILS Z 34R → DUMET2 → <MAP2>
+ILS Z 16L → DUMET1 → <MP1>
+ILS Z 35L → DUMET2 → <MAP2>
+ILS Z 17R → DUMET1 → <MP1>",[PD235]  R-276,,"・LIDはSTARとAPPを通報
+・Transition : FL118
+
+・Corridor：FL240 / 280 / 300 / 400","To ZSPD via IKAROS 4, FPR, 7,000'",9,8
+NRT-TSN,,,,,,,,,,,,,,,,,,,,
+TSN-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-DLC,,,,,,,,,,,,,,,,,,,,
+DLC-NRT,,,,,,,,,,,,,,,,,,,,
 NRT-HAN,135',43',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
 16R → OLVAN2 → <SAMUS> or NO Trans
 34L → BORLO2
