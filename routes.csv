@@ -1332,7 +1332,6 @@ RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
 TFRC2 /1",,"・KAZAK入域時のHF通信要領
 →""San Francisco × 2, JL941, we have CPDLC connection, SELCAL ####, departed NRT, destination GUM, registration JA####, request SELCAL check""
 
-・KZAKでM.02以上の速度変更は通報
 ・ATISはVoice
 ・Transition Level FL180
 
@@ -1347,6 +1346,11 @@ TFRC2 /1",,"・KAZAK入域時のHF通信要領
 ・Direcgt OBALE, descend at pilot's discretion maintain 3,000ft
 → その後RVによってFinalに誘導される。
 ""HDG 090, maintain 2,600ft until establish, cleared for ILS Rwy 6L approach""
+
+・VIS 6Lについて
+→CDU SET は CETAS→UNZ51（UNZ-2nm）→UNZ→RW06L
+→UNZ51を150/1800に。RWY06Lに300ftを入れる。
+→ATCからはExpect ILS 6Lと言われていたが、UNZ60nm手前くらいで雲の状況を見て"" If able RQ VIS""と言ったら快諾。VISになると一気に3000くらい高くなるのでFLCH+SPD BRKで処理。
 
 ・smからmへの単位換算  [OMS 6.2.1.1 単位の換算について]
 ・RWY 06は受け 24は下り
