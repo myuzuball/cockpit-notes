@@ -1329,11 +1329,17 @@ Agana GND: 121.9
 Agana Ramp: 121.6",TRUE,"""Contact Guam Center 118.7 at 250nm out of Guam, SQ2100"" 
 →CPDLC利用時もSQ 2100をセットする。","ILS 6L → UNZ/-20 - OBALE繋
 RNAV 24R → UNZ/-20 - WABOX繋","UNZ R-330
-TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
+TFRC2 /1",,"・KAZAK入域時のHF通信要領
+→""San Francisco × 2, JL941, we have CPDLC connection, SELCAL ####, departed NRT, destination GUM, registration JA####, request SELCAL check""
+
+・KZAKでM.02以上の速度変更は通報
 ・ATISはVoice
 ・Transition Level FL180
 
 ・着陸後はGND飛ばしてRamp
+
+・Spot 9では、誘導線が2つある。「9」と「9A」である。
+→767では向かって右側の「9」の導入線を使用すること。
 
 ・ILS 6LのPROC TurnがLegに入っていないか注意
 ・Rwy 6LのAimingはトーフ前縁
@@ -1346,7 +1352,9 @@ TFRC2 /1",,"・KZAKでM.02以上の速度変更は通報
 ・RWY 06は受け 24は下り
 　06L/24R：±0.59%
 　06R/24L：±0.70%","To PGUM via OLVAN 2, FPR, FL230",9,10
-GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋",TFRC2 /1,"・Boading開始は30分前をRQされる。
+GUM-NRT,305',135',800',121.9,121.6,131.8,"DPO06T → 1,000とFPL繋",TFRC2 /1,"・空港からは半径4nm、高度2,600ft MSLまではClass D → 200ktが上限である。
+
+・Boading開始は30分前をRQされる。
 ・GNDよりClearance取得
 　→RampにRQ P/B → RampにRQ Taxi でCTC GND指示
 
