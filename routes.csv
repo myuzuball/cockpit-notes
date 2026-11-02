@@ -1591,8 +1591,66 @@ ILS Z 17R → DUMET1 → <MP1>",[PD235]  R-276,,"・LIDはSTARとAPPを通報
 ・Transition : FL118
 
 ・Corridor：FL240 / 280 / 300 / 400","To ZSPD via IKAROS 4, FPR, 7,000'",9,8
-NRT-TSN,,,,,,,,,,,,,,,,,,,,
-TSN-NRT,,,,,,,,,,,,,,,,,,,,
+NRT-TSN,135',6,"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
+16R → OLVAN2 → <SAMUS> or NO Trans
+34L → BORLO2
+16R → BORLO2
+34L → TETRA8 → <ENPAR>
+16R → TETRA8 → <ENPAR>
+34L → PIGOK2
+16R → PIGOK2
+34L → REDEK2
+16R → REDEK2",RJAA /416,"Taxi Coded RTE確認
+
+34LGT
+34LA9GT
+
+SPID実施時Initial WPTの確認",-,"Tianjin
+APP: 125.25 / 127.9
+TWR: 118.425 / 118.2
+GND: 121.95
+Apron: 121.725 / 121.7",TRUE,,"ILS 16L → DUMAP 7K/8R → <TJ960>
+ILS 34R → DUMAP1Q → <TJ841>",TJ945 / R-121 / R-301 (STAR変更対策),,"D-ATISあり(30分毎) / Transition : FL118 / 旧ICAO方式
+
+・PEK CTLと話している限りはQNE運用 → on STDの語
+・TSN ACAは~3,600mだがPEK CTLより2,400m前後までの降下指示あり
+
+・Beijin TMAではMAX 280kt
+・160kt by 6.0nm [Jeppesen 10-1P1 2.1 Speed Restr]
+
+・APOのTail wind limit 5m/sec
+
+・Marshaller直進/停止のみ。""Stop"" はパドルを裏返す。
+・Taxi Max 27kt / Obst 8kt","To ZBTJ via TETRA 8 DEP, ENPAR trans, FPR, FL240",9,8
+TSN-NRT,6,135',800',121.8,121.72 / 121.7,132.0,"16R → MUGLO 1T
+34L → MUGLO 3W",,"NADP2 ○ / Maintain 900m (3,000ft)
+
+・DCL 40分前 / Voice 10分前
+・16R/34L Non-Grooved
+
+・旧ICAO方式 / ATISは30分毎
+・2500AGL 4NM 圏内は200kt or Min Safe Air SPD
+
+・GNDに""Ready,we have PDC,  Stand　　, Info 　　を通報
+・P/B方向ミス多発中。GND StarffはNovember or Sierra の語を使用。
+・Taxi Max 27kt / Obst 8kt
+
+・Climbはon standard / on QNH",HAKKA FL350 / GURIP FL150,"APP: 124.4 / 127.7
+TWR: 118.35 / 118.2 (A Rwy)
+GND: 121.95 / 121.85
+Ramp: 121.6 / 121.75",TRUE,,"ILS Y/Z 34R → RUTAS T → TYLER
+ILS Y/Z 16L → RUTAS G → GEMIN
+ILS Y/Z 34R → LUBRA T → TYLER
+ILS Y/Z 16L → LUBRA G → GEMIN
+ILS Y/Z 34R → SWAMP T → TYLER
+ILS Y/Z 16L → SWAMP G → GEMIN",,"TYO APP 1分 → 7600/TWR/VFR
+34 in use → GIINA at 4T or assigned → 34Lへ
+16 in use → LAKES at 6T or assigned → 16Rへ","RUTAS G ARR → ILS Y 16Lの場合、RVでのShort CutによってCDU上のETAから最大8分くらいは早着できる。
+
+170kt until 7 DMEなどの指示があり得る。
+G/Dについて
+・34L進入時        IYQ 11.8 DME (NRE 14.3 DME)
+・34R進入時        ITJ 13.6 DME (NRE 14.0 DME)","To RJAA via FPR, RWY***, follow MUGLO 1T/3W DEP, mt 900m, QNH　 DEP freq 127.9",8,9
 NRT-DLC,,,,,,,,,,,,,,,,,,,,
 DLC-NRT,,,,,,,,,,,,,,,,,,,,
 NRT-HAN,135',43',"3,000'",121.9,121.75 (PAX) / 121.6 (CGO),131.2 (NARITA),"34L → OLVAN2 → <SAMUS> or NO Trans
